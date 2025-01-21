@@ -22,3 +22,9 @@ logs
 # Local env files
 .env.local
 .env.*.local
+
+# Local Netlify folder
+.netlify
+
+# Netlify
+.netlify/
