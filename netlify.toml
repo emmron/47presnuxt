@@ -1,7 +1,7 @@
 [build]
   command = "NITRO_PRESET=netlify npx nuxt build"
   publish = ".output/public"
-  functions = ".netlify/functions-internal/server"
+  edge_functions = ".output/server"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -9,7 +9,7 @@
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/server"
+  to = "/.netlify/edge-functions/server"
   status = 200
   force = true
 
@@ -17,3 +17,5 @@
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Accept"
