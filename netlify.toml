@@ -1,6 +1,6 @@
 [build]
   command = "NITRO_PRESET=netlify npx nuxt build"
-  publish = ".output/public"
+  publish = "dist"
   functions = ".netlify/functions-internal/server"
 
 [build.environment]
@@ -16,4 +16,4 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Access-Control-Allow-Origin = "*" 
+    Access-Control-Allow-Origin = "*"
