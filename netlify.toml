@@ -1,7 +1,7 @@
 [build]
   command = "NITRO_PRESET=netlify npx nuxt build"
   publish = ".output/public"
-  edge_functions = ".output/server"
+  functions = ".netlify/functions-internal/server"
 
 [build.environment]
   NODE_VERSION = "18"
