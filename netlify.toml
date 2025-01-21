@@ -1,6 +1,6 @@
 [build]
   command = "NITRO_PRESET=netlify npx nuxt build"
-  publish = "dist"
+  publish = ".output/public"
   functions = ".netlify/functions-internal/server"
 
 [build.environment]
