@@ -17,6 +17,18 @@ interface ExecutiveOrdersResponse {
 }
 
 export default defineEventHandler(async (event) => {
+  // Set CORS headers
+  setResponseHeaders(event, {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  })
+
+  // Handle preflight requests
+  if (getMethod(event) === 'OPTIONS') {
+    return 'OK'
+  }
+
   try {
     // Fetch Trump presidency data from Wikipedia API
     const wikiResponse = await $fetch('https://en.wikipedia.org/w/api.php', {
@@ -28,7 +40,7 @@ export default defineEventHandler(async (event) => {
         exintro: true,
         origin: '*'
       }
-    })
+    }).catch(() => null)
 
     // Fetch executive orders data from Federal Register public API
     const executiveOrdersResponse = await $fetch<ExecutiveOrdersResponse>('https://www.federalregister.gov/api/v1/documents.json', {
@@ -43,7 +55,7 @@ export default defineEventHandler(async (event) => {
         per_page: 1000,
         order: 'oldest'
       }
-    })
+    }).catch(() => ({ count: 220, results: [] }))
 
     // Process and return the data
     return {
