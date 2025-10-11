@@ -1,4 +1,6 @@
 ---
+import globalStylesHref from '../styles/global.css?url';
+
 const { title = 'Perth Crypto News & Discussion', description = 'Stay ahead with the latest crypto headlines, market snapshots, and community conversations from Perth.' } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -12,7 +14,7 @@ const { title = 'Perth Crypto News & Discussion', description = 'Stay ahead with
     <link rel="stylesheet" href="/reset.css" />
     <link rel="stylesheet" href="/noise.css" />
     <link rel="stylesheet" href="/stars.css" />
-    <link rel="stylesheet" href={Astro.resolve('../styles/global.css')} />
+    <link rel="stylesheet" href={globalStylesHref} />
   </head>
   <body>
     <header class="site-header">
