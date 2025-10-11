@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  link: string;
+  label: string;
+}
+const { title, description, link, label } = Astro.props as Props;
+---
+<a class="card resource" href={link} target="_blank" rel="noreferrer">
+  <div class="resource-header">
+    <span class="tag">{label}</span>
+    <span class="icon" aria-hidden="true">↗</span>
+  </div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</a>
+
+<style>
+  .resource {
+    display: grid;
+    gap: 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  .resource:hover {
+    border-color: rgba(59, 245, 255, 0.4);
+    transform: translateY(-5px);
+  }
+
+  .resource-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(245, 247, 255, 0.6);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.45;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  .icon {
+    font-size: 1.3rem;
+    color: rgba(245, 247, 255, 0.55);
+  }
+</style>

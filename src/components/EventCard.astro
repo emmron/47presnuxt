@@ -1,0 +1,82 @@
+---
+interface Props {
+  name: string;
+  date: string;
+  location: string;
+  description: string;
+  link: string;
+}
+const { name, date, location, description, link } = Astro.props as Props;
+---
+<a class="card event" href={link} target="_blank" rel="noreferrer">
+  <div class="event-header">
+    <span class="tag">Perth meetup</span>
+    <span class="event-date">{date}</span>
+  </div>
+  <h3>{name}</h3>
+  <p>{description}</p>
+  <div class="event-footer">
+    <span class="location">{location}</span>
+    <span class="cta">RSVP →</span>
+  </div>
+</a>
+
+<style>
+  .event {
+    display: grid;
+    gap: 1.2rem;
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .event:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 245, 255, 0.45);
+  }
+
+  .event-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(245, 247, 255, 0.5);
+    font-size: 0.85rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  .event-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(245, 247, 255, 0.65);
+    font-weight: 600;
+  }
+
+  .location {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .location::before {
+    content: '📍';
+  }
+
+  .event-date {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cta {
+    color: var(--color-primary);
+  }
+</style>

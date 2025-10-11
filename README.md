@@ -1,30 +1,35 @@
-# Trump Presidency Statistics
+# Perth Crypto Hub
 
-A Nuxt.js website that displays key statistics and data from Donald Trump's presidency (2017-2021).
+A modern Astro site delivering Perth-focused crypto news, market data, and community discussions.
 
 ## Features
 
-- Interactive dashboard of key economic indicators
-- Historical data visualization
-- Mobile-responsive design
-- Built with Nuxt 3 and Tailwind CSS
+- Curated headlines tailored to Western Australia's digital asset scene
+- Market pulse dashboard with key local metrics
+- Community forum highlights and upcoming meetups
+- Newsletter signup and resource hub for Perth crypto professionals
 
-## Setup
+## Getting started
 
 ```bash
 # Install dependencies
 npm install
 
-# Start development server
+# Start the local dev server
 npm run dev
+
+# Run Astro's static analysis
+npm run check
 
 # Build for production
 npm run build
+
+# Preview the production build locally
+npm run preview
 ```
 
-## Data Sources
+## Tech stack
 
-Statistics are sourced from official government data and reliable economic sources:
-- Bureau of Labor Statistics
-- Bureau of Economic Analysis
-- S&P 500 Historical Data
+- [Astro 4](https://astro.build/) for site generation
+- Vanilla CSS with custom gradients and glassmorphism accents
+- Prettier for formatting, including Astro support
