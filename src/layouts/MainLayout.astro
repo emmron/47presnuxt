@@ -1,0 +1,184 @@
+---
+const { title = 'Perth Crypto News & Discussion', description = 'Stay ahead with the latest crypto headlines, market snapshots, and community conversations from Perth.' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/reset.css" />
+    <link rel="stylesheet" href="/noise.css" />
+    <link rel="stylesheet" href="/stars.css" />
+    <link rel="stylesheet" href={Astro.resolve('../styles/global.css')} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-glow"></span>
+          <span class="brand-name">Perth Crypto Hub</span>
+          <span class="brand-tag">News · Markets · Community</span>
+        </a>
+        <nav>
+          <a href="#news">News</a>
+          <a href="#markets">Markets</a>
+          <a href="#community">Community</a>
+          <a href="#discussion" class="cta-link">Join the chat</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <span class="brand-name">Perth Crypto Hub</span>
+          <p>Independent crypto journalism and community from Western Australia.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#news">Latest headlines</a>
+          <a href="#discussion">Community feed</a>
+          <a href="#subscribe">Subscribe</a>
+        </div>
+      </div>
+      <p class="footer-meta">© {new Date().getFullYear()} Perth Crypto Hub. Built with Astro.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(5, 6, 15, 0.78);
+    border-bottom: 1px solid var(--color-border);
+    backdrop-filter: blur(16px);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 0;
+    gap: 2rem;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-weight: 500;
+  }
+
+  nav a {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+
+  nav a:hover,
+  nav a.cta-link {
+    color: var(--color-primary);
+  }
+
+  nav a.cta-link {
+    border: 1px solid rgba(59, 245, 255, 0.32);
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .brand {
+    position: relative;
+    display: grid;
+    gap: 0.1rem;
+    font-weight: 600;
+  }
+
+  .brand-glow {
+    position: absolute;
+    inset: -8px -12px;
+    background: radial-gradient(circle at top left, rgba(59, 245, 255, 0.35), transparent 70%);
+    filter: blur(12px);
+    opacity: 0.8;
+  }
+
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: -0.015em;
+    z-index: 1;
+  }
+
+  .brand-tag {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--color-muted);
+    z-index: 1;
+  }
+
+  .site-footer {
+    margin-top: 6rem;
+    padding: 3rem 0 2rem;
+    background: linear-gradient(180deg, rgba(10, 12, 25, 0.2), rgba(5, 6, 15, 0.85));
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .footer-inner p {
+    color: var(--color-muted);
+    margin-top: 0.65rem;
+    max-width: 40ch;
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .footer-links a {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-primary);
+  }
+
+  .footer-meta {
+    text-align: center;
+    color: rgba(245, 247, 255, 0.45);
+    font-size: 0.75rem;
+    margin: 3rem 0 0;
+  }
+
+  @media (max-width: 768px) {
+    .header-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    nav {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      row-gap: 0.75rem;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+    }
+  }
+</style>

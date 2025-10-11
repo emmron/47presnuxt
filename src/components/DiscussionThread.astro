@@ -1,0 +1,113 @@
+---
+interface Props {
+  topic: string;
+  author: string;
+  excerpt: string;
+  replies: number;
+  tags: string[];
+  lastActive: string;
+}
+const { topic, author, excerpt, replies, tags, lastActive } = Astro.props as Props;
+---
+<article class="card thread">
+  <div class="thread-meta">
+    <span class="tag">{author}</span>
+    <span class="timestamp">Last active {lastActive}</span>
+  </div>
+  <h3>{topic}</h3>
+  <p>{excerpt}</p>
+  <div class="thread-footer">
+    <div class="tags">
+      {tags.map((tag) => (
+        <span class="chip" data-tag={tag.toLowerCase()}>{tag}</span>
+      ))}
+    </div>
+    <span class="replies">{replies} replies</span>
+  </div>
+</article>
+
+<style>
+  .thread {
+    display: grid;
+    gap: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  .thread:hover {
+    border-color: rgba(255, 110, 199, 0.45);
+    transform: translateY(-4px);
+  }
+
+  .thread-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(245, 247, 255, 0.55);
+    font-size: 0.85rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.4;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+
+  .thread-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 110, 199, 0.32);
+    background: rgba(255, 110, 199, 0.1);
+    color: #ffb4e3;
+  }
+
+  .chip[data-tag='defi'] {
+    border-color: rgba(59, 245, 255, 0.32);
+    background: rgba(59, 245, 255, 0.14);
+    color: var(--color-primary);
+  }
+
+  .chip[data-tag='regulation'] {
+    border-color: rgba(223, 173, 255, 0.32);
+    background: rgba(223, 173, 255, 0.14);
+    color: #f5dcff;
+  }
+
+  .replies {
+    font-weight: 600;
+    color: rgba(245, 247, 255, 0.7);
+  }
+
+  .timestamp {
+    color: rgba(245, 247, 255, 0.45);
+  }
+
+  @media (max-width: 640px) {
+    .thread-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

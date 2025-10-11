@@ -1,0 +1,101 @@
+---
+interface Metric {
+  label: string;
+  value: string;
+  change: string;
+  direction: 'up' | 'down' | 'steady';
+}
+interface Props {
+  metrics: Metric[];
+}
+const { metrics } = Astro.props as Props;
+---
+<section class="market" id="markets">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <span class="tag">Market pulse</span>
+        <h2>Key Perth trading signals</h2>
+      </div>
+      <p>
+        Local desks share the on-chain indicators and macro signals driving WA's crypto sentiment this
+        morning.
+      </p>
+    </div>
+    <div class="market-grid">
+      {metrics.map((metric) => (
+        <div class={`card metric metric-${metric.direction}`}>
+          <span class="metric-label">{metric.label}</span>
+          <strong>{metric.value}</strong>
+          <span class="metric-change">{metric.change}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .market {
+    background: linear-gradient(180deg, rgba(10, 12, 25, 0.25), rgba(5, 6, 15, 0.7));
+    border-block: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .market-grid {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .metric {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.6rem 1.8rem;
+    text-align: left;
+    border: 1px solid rgba(59, 245, 255, 0.18);
+  }
+
+  .metric strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+  }
+
+  .metric-label {
+    color: rgba(245, 247, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+  }
+
+  .metric-change {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .metric-up {
+    border-color: rgba(88, 255, 177, 0.35);
+    background: rgba(88, 255, 177, 0.08);
+  }
+
+  .metric-up .metric-change {
+    color: #58ffb1;
+  }
+
+  .metric-down {
+    border-color: rgba(255, 110, 199, 0.35);
+    background: rgba(255, 110, 199, 0.08);
+  }
+
+  .metric-down .metric-change {
+    color: #ff6ec7;
+  }
+
+  .metric-steady {
+    border-color: rgba(163, 177, 255, 0.3);
+    background: rgba(163, 177, 255, 0.08);
+  }
+
+  .metric-steady .metric-change {
+    color: rgba(245, 247, 255, 0.6);
+  }
+</style>
