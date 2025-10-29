@@ -111,6 +111,13 @@ export const events = [
 
 export const resources = [
   {
+    title: 'Build a production-ready SvelteKit API',
+    description:
+      "Step-by-step guide to wiring server routes, locals, and validation for a fast, type-safe API in SvelteKit.",
+    link: '/guides/sveltekit-api',
+    label: 'Guides',
+  },
+  {
     title: 'WA Digital Asset Policy Tracker',
     description: 'Live database of local submissions, consultations, and regulatory timelines affecting digital assets in Western Australia.',
     link: 'https://example.com/policy-tracker',
