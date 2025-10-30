@@ -1,0 +1,266 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+
+const pageTitle = 'Build a production-ready API in SvelteKit';
+const pageDescription =
+  'How to structure server routes, locals, validation, and CORS in SvelteKit for a fast, type-safe API layer.';
+---
+<MainLayout title={`${pageTitle} | Perth Crypto Hub`} description={pageDescription}>
+  <article class="guide">
+    <header class="guide__header">
+      <a class="guide__back" href="/">← Back to home</a>
+      <h1>{pageTitle}</h1>
+      <p>
+        Here’s the clean, modern way to build an API inside SvelteKit—fast, type-safe, and ready for production
+        from day one. Follow the steps below to keep endpoints thin, business logic sharable, and TypeScript
+        working for you instead of against you.
+      </p>
+    </header>
+
+    <section id="server-routes">
+      <h2>1) Use server routes (<code>+server.ts</code>)</h2>
+      <p>
+        Define REST-style handlers with filesystem routing. Every <code>+server.ts</code> under <code>src/routes</code>
+        maps to a public endpoint, so create folders that mirror the URLs you want to expose.
+      </p>
+      <pre class="code-block"><code class="language-text">src/
+  routes/
+    api/
+      v1/
+        todos/
+          +server.ts
+</code></pre>
+      <p>
+        Export functions named after HTTP verbs and return a <code>Response</code>. The
+        <code>json()</code> helper from <code>@sveltejs/kit</code> handles headers and serialisation for you.
+      </p>
+      <pre class="code-block"><code class="language-ts">// src/routes/api/v1/todos/+server.ts
+import { json, error } from '@sveltejs/kit';
+import { z } from 'zod';
+import type { RequestHandler } from '@sveltejs/kit';
+
+const Todo = z.object({ title: z.string().min(1), done: z.boolean().default(false) });
+
+export const GET: RequestHandler = async ({ locals }) => {
+  const items = await locals.db.todo.findMany();
+  return json(items);
+};
+
+export const POST: RequestHandler = async ({ request, locals }) => {
+  const body = await request.json();
+  const parsed = Todo.safeParse(body);
+  if (!parsed.success) throw error(400, 'Invalid payload');
+
+  const created = await locals.db.todo.create({ data: parsed.data });
+  return json(created, { status: 201 });
+};
+</code></pre>
+      <p>
+        Why this way: SvelteKit treats <code>+server.ts</code> files as API routes, mapping directly from the
+        filesystem to URLs with zero additional wiring.
+      </p>
+    </section>
+
+    <section id="locals">
+      <h2>2) Put shared stuff in <code>hooks.server.ts</code> and <code>locals</code></h2>
+      <p>
+        Initialise dependencies once, then attach them to <code>event.locals</code> so every endpoint and
+        server-only module can access them.
+      </p>
+      <pre class="code-block"><code class="language-ts">// src/hooks.server.ts
+import type { Handle } from '@sveltejs/kit';
+import { prisma } from '$lib/server/db';
+
+export const handle: Handle = async ({ event, resolve }) => {
+  event.locals.db = prisma;
+  // Optionally read cookies/JWT and set event.locals.user here
+  return resolve(event);
+};
+</code></pre>
+      <p>
+        Give <code>locals</code> real types in <code>src/app.d.ts</code> for full editor support and safe usage across
+        the app.
+      </p>
+      <pre class="code-block"><code class="language-ts">// src/app.d.ts
+declare global {
+  namespace App {
+    interface Locals {
+      db: import('@prisma/client').PrismaClient;
+      user?: { id: string; email: string };
+    }
+  }
+}
+export {};
+</code></pre>
+    </section>
+
+    <section id="server-fetch">
+      <h2>3) Use the special server <code>fetch</code> when calling other APIs</h2>
+      <p>
+        When you need to compose endpoints or call external APIs from the server, use <code>event.fetch</code>. It
+        skips the network hop for internal calls and automatically forwards cookies/credentials for you.
+      </p>
+      <pre class="code-block"><code class="language-ts">// inside a +server.ts handler
+export const GET = async ({ fetch }) => {
+  const res = await fetch('/api/v1/other'); // relative, credentialled
+  return json(await res.json());
+};
+</code></pre>
+    </section>
+
+    <section id="cors">
+      <h2>4) CORS (only if you need cross-origin access)</h2>
+      <p>
+        If clients hosted on another origin call your API, respond with CORS headers and make sure to handle
+        <code>OPTIONS</code> preflight requests.
+      </p>
+      <pre class="code-block"><code class="language-ts">const CORS = {
+  'Access-Control-Allow-Origin': 'https://your-frontend.example',
+  'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+  'Access-Control-Allow-Headers': 'content-type, authorization',
+  'Access-Control-Allow-Credentials': 'true'
+};
+
+export const OPTIONS = async () => new Response(null, { status: 204, headers: CORS });
+// Then include `headers: CORS` on your other responses
+</code></pre>
+      <p class="note">
+        Gotcha: CORS is only needed when another origin hits your API from the browser. If everything lives on the
+        same domain (or you’re only calling from server code), skip it to avoid unnecessary headers.
+      </p>
+    </section>
+
+    <section id="best-practices">
+      <h2>5) Small but important best practices</h2>
+      <ul>
+        <li><strong>Validation:</strong> use Zod (as above) to keep handlers slim and trustworthy.</li>
+        <li><strong>Errors:</strong> throw <code>error(status, message)</code> from <code>@sveltejs/kit</code> for
+          consistent responses.</li>
+        <li><strong>Auth:</strong> parse cookies/JWT in <code>handle</code> and set <code>locals.user</code>. Routes read
+          <code>locals.user</code>.</li>
+        <li><strong>Types:</strong> prefer <code>export const GET = (…) satisfies RequestHandler</code> or explicit
+          <code>RequestHandler</code> annotations for stronger typing.</li>
+        <li><strong>Structure:</strong> keep business logic in <code>$lib/server/**</code> and call it from endpoints; routes stay thin.</li>
+        <li><strong>Adapters:</strong> pick the adapter (Node, Vercel, etc.) that matches your deployment target.</li>
+      </ul>
+    </section>
+
+    <section id="client">
+      <h2>6) Minimal client usage</h2>
+      <p>
+        In your pages or <code>+page.server.ts</code> files, call your API with the server-aware <code>fetch</code> to
+        keep credentials intact and avoid duplicate validation logic.
+      </p>
+      <pre class="code-block"><code class="language-ts">// src/routes/todos/+page.server.ts
+export const load = async ({ fetch }) => {
+  const res = await fetch('/api/v1/todos');
+  return { todos: await res.json() };
+};
+</code></pre>
+    </section>
+
+    <section id="wrap-up">
+      <h2>Bring it all together</h2>
+      <p>
+        Following this pattern keeps your SvelteKit API clean, tested, and ready to deploy. Share dependencies through
+        <code>locals</code>, keep handlers thin, and lean on the framework’s built-in primitives instead of
+        reinventing them.
+      </p>
+      <p>
+        Want a tailored starter for your stack (database, auth, hosting)? Let us know and we’ll drop in a configured
+        <code>hooks.server.ts</code>, CRUD endpoints, and a lightweight auth guard.
+      </p>
+    </section>
+  </article>
+</MainLayout>
+
+<style>
+  .guide {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 6rem 1.5rem;
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  .guide__header {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .guide__back {
+    color: rgba(245, 247, 255, 0.6);
+    font-size: 0.95rem;
+  }
+
+  .guide__back:hover {
+    color: var(--color-primary);
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 3vw, 3rem);
+    margin: 0;
+  }
+
+  p {
+    color: var(--color-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  section {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    margin: 0;
+  }
+
+  ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  li::marker {
+    color: var(--color-primary);
+  }
+
+  .code-block {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    background: rgba(10, 14, 28, 0.85);
+    border: 1px solid rgba(59, 245, 255, 0.15);
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Source Code Pro', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  code {
+    font-family: inherit;
+  }
+
+  .note {
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+  }
+
+  @media (max-width: 720px) {
+    .guide {
+      padding: 4.5rem 1.25rem;
+      gap: 3rem;
+    }
+
+    .code-block {
+      font-size: 0.88rem;
+      padding: 1rem 1.2rem;
+    }
+  }
+</style>
