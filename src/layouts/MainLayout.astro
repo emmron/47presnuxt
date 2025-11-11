@@ -13,10 +13,18 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   </head>
   <body>
     <header class="site-header" id="header">
+      <canvas class="header-canvas" id="headerCanvas"></canvas>
+      <div class="header-gradient-border"></div>
       <div class="header-glow"></div>
+
       <div class="container header-inner">
-        <a class="brand" href="/">
+        <a class="brand" href="/" id="brand">
           <div class="brand-icon">
+            <div class="icon-rings">
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+              <div class="ring ring-3"></div>
+            </div>
             <svg viewBox="0 0 40 40" fill="none">
               <circle cx="20" cy="20" r="18" stroke="url(#brandGradient)" stroke-width="2"/>
               <path d="M20 8v24M12 20h16" stroke="url(#brandGradient)" stroke-width="2" stroke-linecap="round"/>
@@ -29,7 +37,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
             </svg>
           </div>
           <div class="brand-text">
-            <span class="brand-logo">CYANWEB</span>
+            <span class="brand-logo">
+              <span class="letter">C</span><span class="letter">Y</span><span class="letter">A</span><span class="letter">N</span><span class="letter">W</span><span class="letter">E</span><span class="letter">B</span>
+            </span>
             <span class="brand-tagline">Digital Solutions</span>
           </div>
         </a>
@@ -41,20 +51,23 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
         </button>
 
         <nav id="mainNav">
-          <a href="#services" class="nav-link">
+          <a href="#services" class="nav-link" data-index="0">
+            <span class="nav-bg"></span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M8 1l1.5 4.5L14 6.5l-4.5 1.5L8 12.5l-1.5-4.5L2 6.5l4.5-1.5L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
             </svg>
             <span>Services</span>
           </a>
-          <a href="#about" class="nav-link">
+          <a href="#about" class="nav-link" data-index="1">
+            <span class="nav-bg"></span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
               <path d="M8 6v5m0-7v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <span>About</span>
           </a>
-          <a href="#contact" class="nav-link cta-link">
+          <a href="#contact" class="nav-link cta-link" data-index="2">
+            <span class="cta-shimmer"></span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M14 1L6 9m8-8L8 15l-2-6-6-2 14-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -101,24 +114,104 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     </footer>
 
     <script>
-      // Header scroll effect
+      // Particles and canvas animation
+      const canvas = document.getElementById('headerCanvas');
+      const ctx = canvas.getContext('2d');
       const header = document.getElementById('header');
       const mobileMenuToggle = document.getElementById('mobileMenuToggle');
       const mainNav = document.getElementById('mainNav');
 
+      let particles = [];
+      let mouseX = 0;
+      let mouseY = 0;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = header.offsetHeight;
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 0.5;
+          this.speedX = Math.random() * 0.5 - 0.25;
+          this.speedY = Math.random() * 0.5 - 0.25;
+          this.opacity = Math.random() * 0.5 + 0.2;
+        }
+
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          if (this.x > canvas.width) this.x = 0;
+          if (this.x < 0) this.x = canvas.width;
+          if (this.y > canvas.height) this.y = 0;
+          if (this.y < 0) this.y = canvas.height;
+        }
+
+        draw() {
+          ctx.fillStyle = `rgba(0, 229, 255, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Create particles
+      for (let i = 0; i < 50; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(particle => {
+          particle.update();
+          particle.draw();
+        });
+
+        // Draw connections
+        particles.forEach((p1, i) => {
+          particles.slice(i + 1).forEach(p2 => {
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
+              ctx.strokeStyle = `rgba(0, 229, 255, ${0.1 * (1 - distance / 120)})`;
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          });
+        });
+
+        requestAnimationFrame(animateParticles);
+      }
+
+      animateParticles();
+
+      // Header scroll effects
       let lastScroll = 0;
       const scrollThreshold = 50;
 
       function handleScroll() {
         const currentScroll = window.pageYOffset;
+        const scrollPercent = Math.min(currentScroll / 500, 1);
 
         if (currentScroll > scrollThreshold) {
           header.classList.add('scrolled');
+          header.style.setProperty('--scroll-progress', scrollPercent);
         } else {
           header.classList.remove('scrolled');
         }
 
-        // Hide header on scroll down, show on scroll up
         if (currentScroll > lastScroll && currentScroll > 200) {
           header.classList.add('hidden');
         } else {
@@ -128,7 +221,6 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
         lastScroll = currentScroll;
       }
 
-      // Throttle scroll event
       let ticking = false;
       window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -140,14 +232,41 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
         }
       });
 
-      // Mobile menu toggle
+      // Magnetic effect for nav links
+      const navLinks = document.querySelectorAll('.nav-link:not(.cta-link)');
+      navLinks.forEach(link => {
+        link.addEventListener('mousemove', (e) => {
+          const rect = link.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+
+          link.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+        });
+
+        link.addEventListener('mouseleave', () => {
+          link.style.transform = '';
+        });
+      });
+
+      // Staggered animation on load
+      const allNavLinks = document.querySelectorAll('.nav-link');
+      allNavLinks.forEach((link, index) => {
+        link.style.animationDelay = `${0.1 + index * 0.1}s`;
+      });
+
+      // Letter animation
+      const letters = document.querySelectorAll('.brand-logo .letter');
+      letters.forEach((letter, index) => {
+        letter.style.animationDelay = `${index * 0.05}s`;
+      });
+
+      // Mobile menu
       mobileMenuToggle?.addEventListener('click', () => {
         mainNav?.classList.toggle('active');
         mobileMenuToggle.classList.toggle('active');
         document.body.classList.toggle('menu-open');
       });
 
-      // Close mobile menu on link click
       document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
           mainNav?.classList.remove('active');
@@ -156,13 +275,21 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
         });
       });
 
-      // Close mobile menu on escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && mainNav?.classList.contains('active')) {
           mainNav.classList.remove('active');
           mobileMenuToggle?.classList.remove('active');
           document.body.classList.remove('menu-open');
         }
+      });
+
+      // Mouse trail effect on header
+      header.addEventListener('mousemove', (e) => {
+        const rect = header.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        header.style.setProperty('--mouse-x', `${x}%`);
+        header.style.setProperty('--mouse-y', `${y}%`);
       });
     </script>
   </body>
@@ -207,13 +334,59 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     z-index: 1000;
     background: transparent;
     border-bottom: 1px solid transparent;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateY(0);
+    --scroll-progress: 0;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+  }
+
+  .header-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.3;
+    transition: opacity 0.4s;
+  }
+
+  .site-header.scrolled .header-canvas {
+    opacity: 0.6;
+  }
+
+  .header-gradient-border {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 229, 255, 0.5),
+      rgba(0, 188, 212, 0.5),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: gradientFlow 3s linear infinite;
+    opacity: 0;
+    height: 1px;
+    bottom: 0;
+    top: auto;
+    transition: opacity 0.4s;
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+
+  .site-header.scrolled .header-gradient-border {
+    opacity: 1;
   }
 
   .site-header.scrolled {
-    background: rgba(10, 14, 39, 0.85);
-    border-bottom-color: rgba(0, 229, 255, 0.1);
+    background: rgba(10, 14, 39, calc(0.85 + var(--scroll-progress) * 0.1));
+    border-bottom-color: rgba(0, 229, 255, 0.2);
     backdrop-filter: blur(20px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   }
@@ -225,13 +398,17 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   .header-glow {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.1), transparent);
+    background: radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y),
+      rgba(0, 229, 255, 0.15) 0%,
+      transparent 50%
+    );
     opacity: 0;
-    transition: opacity 0.4s;
+    transition: opacity 0.3s;
     pointer-events: none;
   }
 
-  .site-header.scrolled .header-glow {
+  .site-header:hover .header-glow {
     opacity: 1;
   }
 
@@ -254,7 +431,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     gap: 12px;
     position: relative;
     z-index: 10;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .brand:hover {
@@ -270,24 +447,56 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     position: relative;
   }
 
-  .brand-icon::before {
-    content: '';
+  .icon-rings {
     position: absolute;
-    inset: -4px;
-    background: radial-gradient(circle, rgba(0, 229, 255, 0.2) 0%, transparent 70%);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s;
+    inset: -8px;
   }
 
-  .brand:hover .brand-icon::before {
-    opacity: 1;
+  .ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50%;
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+
+  .ring-1 {
+    animation-delay: 0s;
+  }
+
+  .ring-2 {
+    animation-delay: 1s;
+  }
+
+  .ring-3 {
+    animation-delay: 2s;
+  }
+
+  @keyframes ringPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.5;
+    }
   }
 
   .brand-icon svg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.3));
+    filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.6));
+    animation: iconFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes iconFloat {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-3px) rotate(5deg);
+    }
   }
 
   .brand-text {
@@ -302,6 +511,22 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     letter-spacing: -0.02em;
     color: #ffffff;
     line-height: 1;
+    display: flex;
+  }
+
+  .letter {
+    display: inline-block;
+    animation: letterBounce 2s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+
+  @keyframes letterBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
   }
 
   .brand-tagline {
@@ -310,10 +535,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     letter-spacing: 0.15em;
     color: rgba(255, 255, 255, 0.6);
     font-weight: 600;
-  }
-
-  .site-header.scrolled .brand-logo {
-    color: #ffffff;
+    transition: all 0.4s;
   }
 
   .site-header.scrolled .brand-tagline {
@@ -366,8 +588,34 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     font-size: 0.95rem;
     font-weight: 600;
     position: relative;
-    padding: 8px 0;
-    transition: all 0.3s ease;
+    padding: 8px 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: navFadeIn 0.6s ease-out forwards;
+  }
+
+  @keyframes navFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .nav-link:hover .nav-bg {
+    opacity: 1;
   }
 
   .nav-link svg:not(.arrow) {
@@ -389,15 +637,17 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 0;
     height: 2px;
     background: linear-gradient(90deg, #00e5ff, #00bcd4);
     transition: width 0.3s ease;
+    border-radius: 2px;
   }
 
   .nav-link:hover::after {
-    width: 100%;
+    width: 80%;
   }
 
   .nav-link.cta-link {
@@ -408,6 +658,23 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     font-weight: 700;
     box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
     border: 1px solid rgba(0, 229, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
   }
 
   .nav-link.cta-link::after {
@@ -420,21 +687,13 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   }
 
   .nav-link.cta-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 188, 212, 0.5);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.5);
     color: #ffffff;
   }
 
   .nav-link.cta-link:hover .arrow {
     transform: translateX(4px);
-  }
-
-  .site-header.scrolled .nav-link {
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .site-header.scrolled .nav-link:hover {
-    color: #00e5ff;
   }
 
   /* Footer Styles */
