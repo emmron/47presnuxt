@@ -1,0 +1,248 @@
+---
+// About section for Cyanweb Solutions
+---
+
+<section id="about" class="about">
+  <div class="container">
+    <div class="about-content">
+      <div class="about-text">
+        <h2>About Cyanweb Solutions</h2>
+        <div class="divider"></div>
+
+        <p class="lead">
+          Pioneering digital excellence in Perth since 1998
+        </p>
+
+        <p>
+          Founded by Jonathan Huckabee and Tracii Vann, Cyanweb Solutions has been at the forefront
+          of digital innovation for over 25 years. Based in Morley, Western Australia, we've helped
+          countless SME businesses transform their digital presence and achieve their online goals.
+        </p>
+
+        <p>
+          With over 30 years of combined IT experience, our team brings deep expertise in web development,
+          digital marketing, and technology consulting. We've been online marketers and web developers
+          since 1996, giving us unique insights into the evolving digital landscape.
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Projects Delivered</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Client Focused</div>
+          </div>
+        </div>
+
+        <div class="founder-info">
+          <h3>Meet Our Founder</h3>
+          <p>
+            <strong>Jonathan Huckabee</strong> - Digital Developer & Technologist<br>
+            Currently serving as Founder and IT lead at The Streets Network, Jonathan brings
+            extensive experience in crafting innovative information technology solutions that
+            drive business success.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-visual">
+        <div class="visual-card">
+          <div class="card-content">
+            <h4>Our Mission</h4>
+            <p>
+              Empowering businesses with cutting-edge digital solutions that drive growth,
+              enhance brand presence, and deliver measurable results.
+            </p>
+          </div>
+        </div>
+
+        <div class="visual-card">
+          <div class="card-content">
+            <h4>Our Values</h4>
+            <ul>
+              <li>✓ Innovation & Excellence</li>
+              <li>✓ Client Success First</li>
+              <li>✓ Transparent Communication</li>
+              <li>✓ Long-term Partnerships</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding: 80px 20px;
+    background: white;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .about-text h2 {
+    font-size: 2.5rem;
+    color: #0d1117;
+    margin-bottom: 20px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+    border-radius: 2px;
+    margin-bottom: 30px;
+  }
+
+  .lead {
+    font-size: 1.4rem;
+    color: #00bcd4;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .about-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+    margin-bottom: 20px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 40px 0;
+    padding: 30px 0;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00bcd4;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.95rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .founder-info {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 30px;
+  }
+
+  .founder-info h3 {
+    color: #0d1117;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+
+  .founder-info p {
+    margin-bottom: 0;
+    font-size: 1.05rem;
+  }
+
+  .founder-info strong {
+    color: #00bcd4;
+  }
+
+  .about-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .visual-card {
+    background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+    border-radius: 12px;
+    padding: 35px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 188, 212, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .visual-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .visual-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  .visual-card p {
+    color: white;
+    opacity: 0.95;
+    line-height: 1.7;
+  }
+
+  .visual-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .visual-card li {
+    padding: 8px 0;
+    font-size: 1.05rem;
+    opacity: 0.95;
+  }
+
+  @media (max-width: 968px) {
+    .about-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+    }
+
+    .stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .about {
+      padding: 60px 20px;
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
