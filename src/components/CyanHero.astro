@@ -87,6 +87,15 @@
     background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #0f1729 100%);
   }
 
+  /* Parallax layers */
+  .hero-background {
+    will-change: transform;
+  }
+
+  .gradient-orb {
+    will-change: transform, opacity;
+  }
+
   .hero-background {
     position: absolute;
     inset: 0;
@@ -445,3 +454,138 @@
     }
   }
 </style>
+
+<script>
+  // Parallax scroll effect synchronized with page scroll
+  let ticking = false;
+
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero') as HTMLElement;
+
+    if (!hero) return;
+
+    const heroHeight = hero.offsetHeight;
+    const scrollProgress = Math.min(scrolled / heroHeight, 1);
+
+    // Parallax background orbs
+    const orbs = document.querySelectorAll('.gradient-orb') as NodeListOf<HTMLElement>;
+    orbs.forEach((orb, index) => {
+      const speed = 0.3 + (index * 0.1);
+      orb.style.transform = `translateY(${scrolled * speed}px)`;
+      orb.style.opacity = `${0.4 - scrollProgress * 0.2}`;
+    });
+
+    // Parallax grid overlay
+    const grid = document.querySelector('.grid-overlay') as HTMLElement;
+    if (grid) {
+      grid.style.transform = `translateY(${scrolled * 0.2}px)`;
+    }
+
+    // Fade out hero content as user scrolls
+    const heroContent = document.querySelector('.hero-content') as HTMLElement;
+    if (heroContent) {
+      heroContent.style.opacity = `${1 - scrollProgress * 0.5}`;
+      heroContent.style.transform = `translateY(${scrolled * 0.15}px)`;
+    }
+
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Animated counter for stats
+  function animateCounter(element: HTMLElement, target: number, duration: number = 2000) {
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(start + (target - start) * easeOutQuart);
+
+      element.textContent = current.toString() + (target >= 100 ? '%' : '+');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Intersection Observer for scroll-triggered animations
+  const observerOptions = {
+    threshold: 0.2,
+    rootMargin: '0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Animate stat numbers
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach((stat, index) => {
+          setTimeout(() => {
+            const text = stat.textContent || '';
+            const value = parseInt(text.replace(/\D/g, ''));
+            animateCounter(stat as HTMLElement, value, 2000);
+          }, index * 200);
+        });
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) {
+    observer.observe(heroStats);
+  }
+
+  // Stagger animation for CTA buttons
+  const buttons = document.querySelectorAll('.btn');
+  buttons.forEach((btn, index) => {
+    (btn as HTMLElement).style.animationDelay = `${1 + index * 0.1}s`;
+  });
+
+  // Mouse move parallax effect for hero content
+  let mouseX = 0;
+  let mouseY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 20;
+  });
+
+  function animateMouseParallax() {
+    currentX += (mouseX - currentX) * 0.1;
+    currentY += (mouseY - currentY) * 0.1;
+
+    const badge = document.querySelector('.hero-badge') as HTMLElement;
+    if (badge) {
+      badge.style.transform = `translate(${currentX * 0.5}px, ${currentY * 0.5}px)`;
+    }
+
+    const title = document.querySelector('.hero-title') as HTMLElement;
+    if (title) {
+      title.style.transform = `translate(${currentX * 0.3}px, ${currentY * 0.3}px)`;
+    }
+
+    requestAnimationFrame(animateMouseParallax);
+  }
+
+  animateMouseParallax();
+</script>

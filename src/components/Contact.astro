@@ -510,4 +510,251 @@
       width: 100%;
     }
   }
+
+  /* Animation states */
+  .section-header {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .section-header.animate-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .info-card {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  .info-card.animate-in {
+    animation: slideScaleIn 0.6s ease-out forwards;
+  }
+
+  @keyframes slideScaleIn {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .contact-form-wrapper {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  .contact-form-wrapper.animate-in {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  @keyframes slideInRight {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .form-group {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .form-group.animate-in {
+    animation: formFieldSlideIn 0.5s ease-out forwards;
+  }
+
+  @keyframes formFieldSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
+
+<script>
+  // Intersection Observer for Contact section animations
+  const observerOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('section-header')) {
+          entry.target.classList.add('animate-in');
+        } else if (entry.target.classList.contains('info-card')) {
+          // Stagger info cards
+          const infoCards = document.querySelectorAll('.info-card');
+          infoCards.forEach((card, index) => {
+            setTimeout(() => {
+              card.classList.add('animate-in');
+            }, index * 150);
+          });
+        } else if (entry.target.classList.contains('contact-form-wrapper')) {
+          entry.target.classList.add('animate-in');
+
+          // Stagger form fields
+          const formGroups = entry.target.querySelectorAll('.form-group');
+          formGroups.forEach((group, index) => {
+            setTimeout(() => {
+              group.classList.add('animate-in');
+            }, 300 + index * 100);
+          });
+
+          // Animate submit button
+          const submitBtn = entry.target.querySelector('.submit-btn');
+          if (submitBtn) {
+            setTimeout(() => {
+              (submitBtn as HTMLElement).style.animation = 'formFieldSlideIn 0.5s ease-out forwards';
+              (submitBtn as HTMLElement).style.opacity = '0';
+              (submitBtn as HTMLElement).style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                (submitBtn as HTMLElement).style.opacity = '1';
+                (submitBtn as HTMLElement).style.transform = 'translateY(0)';
+              }, 50);
+            }, 300 + formGroups.length * 100);
+          }
+        }
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe elements
+  const contactHeader = document.querySelector('.contact .section-header');
+  if (contactHeader) {
+    observer.observe(contactHeader);
+  }
+
+  const firstInfoCard = document.querySelector('.info-card');
+  if (firstInfoCard) {
+    observer.observe(firstInfoCard);
+  }
+
+  const formWrapper = document.querySelector('.contact-form-wrapper');
+  if (formWrapper) {
+    observer.observe(formWrapper);
+  }
+
+  // Parallax effect for contact background
+  let ticking = false;
+
+  function updateContactParallax() {
+    const scrolled = window.pageYOffset;
+    const contactSection = document.querySelector('.contact') as HTMLElement;
+
+    if (!contactSection) return;
+
+    const sectionTop = contactSection.offsetTop;
+    const sectionHeight = contactSection.offsetHeight;
+    const scrollProgress = (scrolled - sectionTop) / sectionHeight;
+
+    if (scrollProgress > -0.5 && scrollProgress < 1.5) {
+      const gradientOrbs = contactSection.querySelectorAll('.gradient-orb') as NodeListOf<HTMLElement>;
+      gradientOrbs.forEach((orb, index) => {
+        const speed = 0.2 + (index * 0.1);
+        orb.style.transform = `translateY(${scrollProgress * 100 * speed}px) rotate(${scrollProgress * 45}deg)`;
+      });
+    }
+
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateContactParallax);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Form input focus animations
+  const formInputs = document.querySelectorAll('.form-input, .form-textarea');
+  formInputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      (input as HTMLElement).style.transform = 'scale(1.02)';
+      (input as HTMLElement).style.boxShadow = '0 8px 30px rgba(0, 188, 212, 0.2)';
+    });
+
+    input.addEventListener('blur', () => {
+      (input as HTMLElement).style.transform = '';
+      (input as HTMLElement).style.boxShadow = '';
+    });
+  });
+
+  // Submit button ripple effect
+  const submitBtn = document.querySelector('.submit-btn');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        left: ${x}px;
+        top: ${y}px;
+        pointer-events: none;
+        animation: rippleEffect 0.6s ease-out;
+      `;
+
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  }
+
+  // Add ripple animation to styles
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes rippleEffect {
+      from {
+        transform: scale(0);
+        opacity: 1;
+      }
+      to {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+    .submit-btn {
+      position: relative;
+      overflow: hidden;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Magnetic hover effect for info cards
+  const infoCards = document.querySelectorAll('.info-card');
+  infoCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const deltaX = (x - centerX) / 20;
+      const deltaY = (y - centerY) / 20;
+
+      (card as HTMLElement).style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      (card as HTMLElement).style.transform = '';
+    });
+  });
+</script>

@@ -455,4 +455,224 @@
       padding: 32px 24px;
     }
   }
+
+  /* Animation states */
+  .header-badge, .about-content h2, .story-text, .founder-card {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .header-badge.animate-in {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+
+  .about-content h2.animate-in {
+    animation: slideInLeft 0.7s ease-out 0.1s forwards;
+  }
+
+  .story-text.animate-in {
+    animation: slideInLeft 0.8s ease-out 0.2s forwards;
+  }
+
+  .founder-card.animate-in {
+    animation: slideInLeft 0.9s ease-out 0.3s forwards;
+  }
+
+  @keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .stat-card {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .stat-card.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .values-card {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  .values-card.animate-in {
+    animation: scaleUp 0.8s ease-out forwards;
+  }
+
+  @keyframes scaleUp {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .values-list li {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  .values-list li.animate-in {
+    animation: slideInRight 0.5s ease-out forwards;
+  }
+
+  @keyframes slideInRight {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 </style>
+
+<script>
+  // Intersection Observer for About section animations
+  const observerOptions = {
+    threshold: 0.2,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('about-content')) {
+          // Animate content elements in sequence
+          const badge = entry.target.querySelector('.header-badge');
+          const title = entry.target.querySelector('h2');
+          const story = entry.target.querySelector('.story-text');
+          const founder = entry.target.querySelector('.founder-card');
+
+          setTimeout(() => badge?.classList.add('animate-in'), 100);
+          setTimeout(() => title?.classList.add('animate-in'), 200);
+          setTimeout(() => story?.classList.add('animate-in'), 300);
+          setTimeout(() => founder?.classList.add('animate-in'), 400);
+        } else if (entry.target.classList.contains('stat-card')) {
+          // Stagger stat cards
+          const statCards = document.querySelectorAll('.stat-card');
+          statCards.forEach((card, index) => {
+            setTimeout(() => {
+              card.classList.add('animate-in');
+
+              // Animate the stat value with counter
+              const statValue = card.querySelector('.stat-value');
+              if (statValue && statValue.textContent) {
+                animateStatCounter(statValue as HTMLElement);
+              }
+            }, index * 150);
+          });
+        } else if (entry.target.classList.contains('values-card')) {
+          entry.target.classList.add('animate-in');
+
+          // Stagger animate values list items
+          const listItems = entry.target.querySelectorAll('.values-list li');
+          listItems.forEach((item, index) => {
+            setTimeout(() => {
+              item.classList.add('animate-in');
+            }, 500 + index * 100);
+          });
+        }
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Animate counter for stat values
+  function animateStatCounter(element: HTMLElement) {
+    const text = element.textContent || '';
+    const hasPlus = text.includes('+');
+    const hasPercent = text.includes('%');
+    const targetValue = parseInt(text.replace(/\D/g, ''));
+
+    let currentValue = 0;
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function update(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+
+      currentValue = Math.floor(targetValue * easeOutQuart);
+      element.textContent = currentValue + (hasPlus ? '+' : hasPercent ? '%' : '');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Observe elements
+  const aboutContent = document.querySelector('.about-content');
+  if (aboutContent) {
+    observer.observe(aboutContent);
+  }
+
+  const firstStatCard = document.querySelector('.stat-card');
+  if (firstStatCard) {
+    observer.observe(firstStatCard);
+  }
+
+  const valuesCard = document.querySelector('.values-card');
+  if (valuesCard) {
+    observer.observe(valuesCard);
+  }
+
+  // Parallax effect for About section background
+  let ticking = false;
+
+  function updateAboutParallax() {
+    const scrolled = window.pageYOffset;
+    const aboutSection = document.querySelector('.about') as HTMLElement;
+
+    if (!aboutSection) return;
+
+    const sectionTop = aboutSection.offsetTop;
+    const sectionHeight = aboutSection.offsetHeight;
+    const scrollProgress = (scrolled - sectionTop) / sectionHeight;
+
+    if (scrollProgress > -0.5 && scrollProgress < 1.5) {
+      const gradientOrb = aboutSection.querySelector('.gradient-orb') as HTMLElement;
+      if (gradientOrb) {
+        gradientOrb.style.transform = `translateY(${scrollProgress * 100}px) translateX(${scrollProgress * 50}px)`;
+      }
+    }
+
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateAboutParallax);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Magnetic hover effect for stat cards
+  const statCards = document.querySelectorAll('.stat-card');
+  statCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const deltaX = (x - centerX) / 15;
+      const deltaY = (y - centerY) / 15;
+
+      (card as HTMLElement).style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      (card as HTMLElement).style.transform = '';
+    });
+  });
+</script>
