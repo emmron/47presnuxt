@@ -39,8 +39,8 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
               <path d="M20 8v24M12 20h16" stroke="url(#brandGradient)" stroke-width="2" stroke-linecap="round"/>
               <defs>
                 <linearGradient id="brandGradient" x1="0" y1="0" x2="40" y2="40">
-                  <stop offset="0%" stop-color="#00e5ff"/>
-                  <stop offset="100%" stop-color="#00bcd4"/>
+                  <stop offset="0%" stop-color="#00ff41"/>
+                  <stop offset="100%" stop-color="#39ff14"/>
                 </linearGradient>
               </defs>
             </svg>
@@ -404,6 +404,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
 </html>
 
 <style>
+  /* ============================================
+     GLOBAL RESETS AND BASE STYLES
+     ============================================ */
   * {
     margin: 0;
     padding: 0;
@@ -433,6 +436,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     padding: 0 20px;
   }
 
+  /* ============================================
+     HEADER BASE STRUCTURE
+     ============================================ */
   .site-header {
     position: fixed;
     top: 0;
@@ -451,6 +457,25 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     perspective: 1000px;
   }
 
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 20px;
+    gap: 3rem;
+    position: relative;
+    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transition: transform 0.3s ease-out;
+    transform-style: preserve-3d;
+  }
+
+  .site-header.scrolled .header-inner {
+    padding: 1rem 20px;
+  }
+
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: CANVAS
+     ============================================ */
   .header-canvas {
     position: absolute;
     top: 0;
@@ -462,11 +487,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     transition: opacity 0.6s;
   }
 
-  .site-header.scrolled .header-canvas {
-    opacity: 0.7;
-  }
-
-  /* Morphing blobs */
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: MORPHING BLOBS
+     ============================================ */
   .morphing-bg {
     position: absolute;
     inset: 0;
@@ -484,7 +507,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   .blob-1 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(0, 229, 255, 0.4) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.4) 0%, transparent 70%);
     top: -200px;
     left: -200px;
     animation-delay: 0s;
@@ -493,7 +516,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   .blob-2 {
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, rgba(0, 188, 212, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.3) 0%, transparent 70%);
     top: -100px;
     right: -100px;
     animation-delay: 7s;
@@ -502,28 +525,15 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   .blob-3 {
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(0, 151, 167, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(13, 255, 0, 0.3) 0%, transparent 70%);
     bottom: -150px;
     left: 50%;
     animation-delay: 14s;
   }
 
-  @keyframes blobMove {
-    0%, 100% {
-      transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    25% {
-      transform: translate(50px, -30px) scale(1.1) rotate(90deg);
-    }
-    50% {
-      transform: translate(-30px, 40px) scale(0.9) rotate(180deg);
-    }
-    75% {
-      transform: translate(40px, 20px) scale(1.05) rotate(270deg);
-    }
-  }
-
-  /* Scan line effect */
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: SCAN LINES
+     ============================================ */
   .scan-line {
     position: absolute;
     top: 0;
@@ -532,36 +542,25 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     height: 2px;
     background: linear-gradient(90deg,
       transparent,
-      rgba(0, 229, 255, 0.8),
-      rgba(0, 188, 212, 0.8),
+      rgba(0, 255, 65, 0.8),
+      rgba(57, 255, 20, 0.8),
       transparent
     );
     animation: scan 3s ease-in-out infinite;
     opacity: 0.5;
   }
 
-  @keyframes scan {
-    0%, 100% {
-      transform: translateY(0);
-      opacity: 0;
-    }
-    50% {
-      opacity: 0.8;
-    }
-    100% {
-      transform: translateY(100px);
-      opacity: 0;
-    }
-  }
-
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: GRADIENTS
+     ============================================ */
   .header-gradient-border {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(0, 229, 255, 0.6),
-      rgba(0, 188, 212, 0.6),
+      rgba(0, 255, 65, 0.6),
+      rgba(57, 255, 20, 0.6),
       transparent
     );
     background-size: 200% 100%;
@@ -573,32 +572,12 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     transition: opacity 0.4s;
   }
 
-  @keyframes gradientFlow {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
-  }
-
-  .site-header.scrolled .header-gradient-border {
-    opacity: 1;
-  }
-
-  .site-header.scrolled {
-    background: rgba(10, 14, 39, calc(0.9 + var(--scroll-progress) * 0.05));
-    border-bottom-color: rgba(0, 229, 255, 0.3);
-    backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  }
-
-  .site-header.hidden {
-    transform: translateY(-100%);
-  }
-
   .header-glow {
     position: absolute;
     inset: 0;
     background: radial-gradient(
       circle 400px at var(--mouse-x) var(--mouse-y),
-      rgba(0, 229, 255, 0.2) 0%,
+      rgba(0, 255, 65, 0.2) 0%,
       transparent 50%
     );
     opacity: 0;
@@ -611,22 +590,34 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     opacity: 1;
   }
 
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 20px;
-    gap: 3rem;
-    position: relative;
-    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-    transition: transform 0.3s ease-out;
-    transform-style: preserve-3d;
+  /* ============================================
+     HEADER STATES: SCROLLED
+     ============================================ */
+  .site-header.scrolled .header-canvas {
+    opacity: 0.7;
   }
 
-  .site-header.scrolled .header-inner {
-    padding: 1rem 20px;
+  .site-header.scrolled .header-gradient-border {
+    opacity: 1;
   }
 
+  .site-header.scrolled {
+    background: rgba(26, 31, 13, calc(0.9 + var(--scroll-progress) * 0.05));
+    border-bottom-color: rgba(0, 255, 65, 0.3);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ============================================
+     HEADER STATES: HIDDEN
+     ============================================ */
+  .site-header.hidden {
+    transform: translateY(-100%);
+  }
+
+  /* ============================================
+     BRAND/LOGO: BASE STYLES
+     ============================================ */
   .brand {
     display: flex;
     align-items: center;
@@ -641,6 +632,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     transform: scale(1.08) translateZ(20px);
   }
 
+  /* ============================================
+     BRAND/LOGO: ICON AND RINGS
+     ============================================ */
   .brand-icon {
     width: 40px;
     height: 40px;
@@ -651,26 +645,22 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     transform-style: preserve-3d;
   }
 
+  .brand-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 65, 0.8));
+    animation: iconFloat 4s ease-in-out infinite;
+  }
+
   .icon-glow-effect {
     position: absolute;
     inset: -10px;
-    background: radial-gradient(circle, rgba(0, 229, 255, 0.4) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.4) 0%, transparent 70%);
     border-radius: 50%;
     filter: blur(15px);
     opacity: 0;
     transition: opacity 0.4s;
     animation: glowPulse 2s ease-in-out infinite;
-  }
-
-  @keyframes glowPulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 0.3;
-    }
-    50% {
-      transform: scale(1.2);
-      opacity: 0.6;
-    }
   }
 
   .brand:hover .icon-glow-effect {
@@ -685,7 +675,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
   .ring {
     position: absolute;
     inset: 0;
-    border: 2px solid rgba(0, 229, 255, 0.4);
+    border: 2px solid rgba(0, 255, 65, 0.4);
     border-radius: 50%;
     animation: ringPulse 3s ease-in-out infinite;
   }
@@ -702,36 +692,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     animation-delay: 2s;
   }
 
-  @keyframes ringPulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.8);
-      opacity: 0.6;
-    }
-  }
-
-  .brand-icon svg {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.8));
-    animation: iconFloat 4s ease-in-out infinite;
-  }
-
-  @keyframes iconFloat {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    25% {
-      transform: translateY(-4px) rotate(5deg);
-    }
-    75% {
-      transform: translateY(2px) rotate(-5deg);
-    }
-  }
-
+  /* ============================================
+     BRAND/LOGO: TEXT AND LETTERS
+     ============================================ */
   .brand-text {
     display: flex;
     flex-direction: column;
@@ -759,7 +722,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     content: attr(data-letter);
     position: absolute;
     inset: 0;
-    background: linear-gradient(45deg, #00e5ff, #00bcd4);
+    background: linear-gradient(45deg, #00ff41, #39ff14);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -769,6 +732,389 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
 
   .letter:hover::before {
     opacity: 1;
+  }
+
+  /* ============================================
+     BRAND/LOGO: TAGLINE
+     ============================================ */
+  .brand-tagline {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .tagline-text {
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.4s;
+  }
+
+  .site-header.scrolled .tagline-text {
+    color: #00ff41;
+  }
+
+  .tagline-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #00ff41;
+    opacity: 0;
+    clip-path: inset(0);
+  }
+
+  .brand:hover .tagline-glitch {
+    animation: glitchText 0.6s infinite;
+  }
+
+  /* ============================================
+     NAVIGATION: BASE STYLES
+     ============================================ */
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    font-weight: 600;
+    position: relative;
+    padding: 10px 18px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: navFadeIn 0.8s ease-out forwards;
+    border-radius: 10px;
+  }
+
+  /* ============================================
+     NAVIGATION: BACKGROUND AND RIPPLE
+     ============================================ */
+  .nav-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.15) 0%, transparent 70%);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .nav-ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 255, 65, 0.6);
+    transform: scale(0);
+    pointer-events: none;
+  }
+
+  .nav-link:hover .nav-bg {
+    opacity: 1;
+  }
+
+  /* ============================================
+     NAVIGATION: ICONS AND HOVER EFFECTS
+     ============================================ */
+  .nav-link svg:not(.arrow) {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link:hover svg:not(.arrow) {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  .nav-link:hover {
+    color: #00ff41;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff41, #39ff14, transparent);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+  }
+
+  .nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* ============================================
+     CTA BUTTON: BASE STYLES
+     ============================================ */
+  .nav-link.cta-link {
+    background: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow:
+      0 4px 15px rgba(57, 255, 20, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-link.cta-link::after {
+    display: none;
+  }
+
+  /* ============================================
+     CTA BUTTON: PULSE AND SHIMMER EFFECTS
+     ============================================ */
+  .cta-pulse {
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 255, 65, 0.8);
+    animation: ctaPulse 2s ease-out infinite;
+    opacity: 0;
+  }
+
+  .cta-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 3s infinite;
+    transform: skewX(-20deg);
+  }
+
+  /* ============================================
+     CTA BUTTON: HOVER STATES
+     ============================================ */
+  .nav-link.cta-link .arrow {
+    opacity: 1;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link.cta-link:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow:
+      0 10px 30px rgba(57, 255, 20, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+
+  .nav-link.cta-link:hover .arrow {
+    transform: translateX(6px);
+  }
+
+  /* ============================================
+     MOBILE MENU: TOGGLE BUTTON
+     ============================================ */
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .mobile-menu-toggle span {
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, #00ff41, #39ff14);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  }
+
+  .mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ============================================
+     FOOTER STYLES: BASE
+     ============================================ */
+  .site-footer {
+    margin-top: 0;
+    background: linear-gradient(135deg, #1a1509 0%, #2d2414 100%);
+    color: white;
+    padding: 60px 20px 0;
+  }
+
+  /* ============================================
+     FOOTER STYLES: LAYOUT
+     ============================================ */
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ============================================
+     FOOTER STYLES: BRAND SECTION
+     ============================================ */
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .footer-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #39ff14 0%, #00ff41 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+
+  .footer-brand p {
+    color: #b4b8c5;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .footer-location {
+    color: #39ff14 !important;
+    font-weight: 500;
+  }
+
+  /* ============================================
+     FOOTER STYLES: LINKS AND SECTIONS
+     ============================================ */
+  .footer-section h4 {
+    color: #39ff14;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    color: #b4b8c5;
+    font-size: 0.95rem;
+  }
+
+  .footer-links a:hover {
+    color: #39ff14;
+    padding-left: 5px;
+  }
+
+  /* ============================================
+     FOOTER STYLES: BOTTOM
+     ============================================ */
+  .footer-bottom {
+    padding: 25px 20px;
+  }
+
+  .footer-meta {
+    text-align: center;
+    color: rgba(180, 184, 197, 0.6);
+    font-size: 0.9rem;
+  }
+
+  /* ============================================
+     KEYFRAME ANIMATIONS: BACKGROUND EFFECTS
+     ============================================ */
+  @keyframes blobMove {
+    0%, 100% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translate(50px, -30px) scale(1.1) rotate(90deg);
+    }
+    50% {
+      transform: translate(-30px, 40px) scale(0.9) rotate(180deg);
+    }
+    75% {
+      transform: translate(40px, 20px) scale(1.05) rotate(270deg);
+    }
+  }
+
+  @keyframes scan {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+
+  /* ============================================
+     KEYFRAME ANIMATIONS: BRAND EFFECTS
+     ============================================ */
+  @keyframes glowPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes ringPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.8);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes iconFloat {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-4px) rotate(5deg);
+    }
+    75% {
+      transform: translateY(2px) rotate(-5deg);
+    }
   }
 
   @keyframes letterBounce {
@@ -796,36 +1142,6 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     80% {
       transform: translate(2px, -2px);
     }
-  }
-
-  .brand-tagline {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-weight: 600;
-    position: relative;
-  }
-
-  .tagline-text {
-    color: rgba(255, 255, 255, 0.6);
-    transition: all 0.4s;
-  }
-
-  .site-header.scrolled .tagline-text {
-    color: #00e5ff;
-  }
-
-  .tagline-glitch {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: #00e5ff;
-    opacity: 0;
-    clip-path: inset(0);
-  }
-
-  .brand:hover .tagline-glitch {
-    animation: glitchText 0.6s infinite;
   }
 
   @keyframes glitchText {
@@ -857,60 +1173,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     }
   }
 
-  .mobile-menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    z-index: 1001;
-    position: relative;
-  }
-
-  .mobile-menu-toggle span {
-    width: 24px;
-    height: 2px;
-    background: linear-gradient(90deg, #00e5ff, #00bcd4);
-    border-radius: 2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-  }
-
-  .mobile-menu-toggle.active span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
-
-  .mobile-menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .mobile-menu-toggle.active span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-  }
-
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
-    font-weight: 600;
-    position: relative;
-    padding: 10px 18px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-    animation: navFadeIn 0.8s ease-out forwards;
-    border-radius: 10px;
-  }
-
+  /* ============================================
+     KEYFRAME ANIMATIONS: NAVIGATION EFFECTS
+     ============================================ */
   @keyframes navFadeIn {
     from {
       opacity: 0;
@@ -922,25 +1187,6 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     }
   }
 
-  .nav-bg {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
-    border-radius: 10px;
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-
-  .nav-ripple {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: rgba(0, 229, 255, 0.6);
-    transform: scale(0);
-    pointer-events: none;
-  }
-
   @keyframes ripple {
     to {
       transform: scale(4);
@@ -948,66 +1194,9 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     }
   }
 
-  .nav-link:hover .nav-bg {
-    opacity: 1;
-  }
-
-  .nav-link svg:not(.arrow) {
-    opacity: 0;
-    transform: translateX(-10px) scale(0.8);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .nav-link:hover svg:not(.arrow) {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-
-  .nav-link:hover {
-    color: #00e5ff;
-    text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 80%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #00e5ff, #00bcd4, transparent);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 2px;
-  }
-
-  .nav-link:hover::after {
-    transform: translateX(-50%) scaleX(1);
-  }
-
-  .nav-link.cta-link {
-    background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
-    color: #ffffff;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 700;
-    box-shadow:
-      0 4px 15px rgba(0, 188, 212, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-pulse {
-    position: absolute;
-    inset: -2px;
-    border-radius: 12px;
-    border: 2px solid rgba(0, 229, 255, 0.8);
-    animation: ctaPulse 2s ease-out infinite;
-    opacity: 0;
-  }
-
+  /* ============================================
+     KEYFRAME ANIMATIONS: CTA BUTTON EFFECTS
+     ============================================ */
   @keyframes ctaPulse {
     0% {
       transform: scale(0.95);
@@ -1019,119 +1208,14 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
     }
   }
 
-  .cta-shimmer {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    animation: shimmer 3s infinite;
-    transform: skewX(-20deg);
-  }
-
   @keyframes shimmer {
     0% { left: -100%; }
     100% { left: 200%; }
   }
 
-  .nav-link.cta-link::after {
-    display: none;
-  }
-
-  .nav-link.cta-link .arrow {
-    opacity: 1;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .nav-link.cta-link:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow:
-      0 10px 30px rgba(0, 188, 212, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-  }
-
-  .nav-link.cta-link:hover .arrow {
-    transform: translateX(6px);
-  }
-
-  /* Footer Styles */
-  .site-footer {
-    margin-top: 0;
-    background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%);
-    color: white;
-    padding: 60px 20px 0;
-  }
-
-  .footer-inner {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 40px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .footer-brand {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .footer-logo {
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #00bcd4 0%, #00e5ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
-  }
-
-  .footer-brand p {
-    color: #b4b8c5;
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  .footer-location {
-    color: #00bcd4 !important;
-    font-weight: 500;
-  }
-
-  .footer-section h4 {
-    color: #00bcd4;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
-
-  .footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .footer-links a {
-    color: #b4b8c5;
-    font-size: 0.95rem;
-  }
-
-  .footer-links a:hover {
-    color: #00bcd4;
-    padding-left: 5px;
-  }
-
-  .footer-bottom {
-    padding: 25px 20px;
-  }
-
-  .footer-meta {
-    text-align: center;
-    color: rgba(180, 184, 197, 0.6);
-    font-size: 0.9rem;
-  }
-
+  /* ============================================
+     MEDIA QUERIES
+     ============================================ */
   @media (max-width: 968px) {
     .mobile-menu-toggle {
       display: flex;
@@ -1143,7 +1227,7 @@ const { title = 'Cyanweb Solutions - Perth Web Development & Digital Marketing',
       right: -100%;
       width: 300px;
       height: 100vh;
-      background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 100%);
+      background: linear-gradient(135deg, #1a1f0d 0%, #2d3319 100%);
       flex-direction: column;
       align-items: flex-start;
       gap: 0;

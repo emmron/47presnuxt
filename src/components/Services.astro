@@ -69,7 +69,7 @@ const services = [
     <div class="section-header">
       <div class="header-badge">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6L8 0Z" fill="#00bcd4"/>
+          <path d="M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6L8 0Z" fill="#39ff14"/>
         </svg>
         <span>Our Services</span>
       </div>
@@ -88,7 +88,7 @@ const services = [
             {service.features.map(feature => (
               <li>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#00bcd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#39ff14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <span>{feature}</span>
               </li>
@@ -140,7 +140,7 @@ const services = [
     transform: translateX(-50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle, rgba(0, 188, 212, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.08) 0%, transparent 70%);
     filter: blur(60px);
   }
 
@@ -161,10 +161,10 @@ const services = [
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: rgba(0, 188, 212, 0.1);
-    border: 1px solid rgba(0, 188, 212, 0.2);
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.2);
     border-radius: 100px;
-    color: #00bcd4;
+    color: #39ff14;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -197,7 +197,7 @@ const services = [
     position: relative;
     padding: 40px;
     background: #ffffff;
-    border: 2px solid rgba(0, 188, 212, 0.1);
+    border: 2px solid rgba(57, 255, 20, 0.1);
     border-radius: 20px;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     animation: fadeInUp 0.6s ease-out backwards;
@@ -218,7 +218,7 @@ const services = [
   .card-glow {
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, #00e5ff, #00bcd4, #0097a7);
+    background: linear-gradient(135deg, #00ff41, #39ff14, #0dff00);
     border-radius: 20px;
     opacity: 0;
     transition: opacity 0.5s;
@@ -228,8 +228,8 @@ const services = [
 
   .service-card:hover {
     transform: translateY(-8px);
-    border-color: rgba(0, 188, 212, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 188, 212, 0.15);
+    border-color: rgba(57, 255, 20, 0.3);
+    box-shadow: 0 20px 60px rgba(57, 255, 20, 0.15);
   }
 
   .service-card:hover .card-glow {
@@ -239,18 +239,18 @@ const services = [
   .service-icon {
     width: 64px;
     height: 64px;
-    background: linear-gradient(135deg, rgba(0, 188, 212, 0.1) 0%, rgba(0, 229, 255, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(0, 255, 65, 0.1) 100%);
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 24px;
-    color: #00bcd4;
+    color: #39ff14;
     transition: all 0.4s;
   }
 
   .service-card:hover .service-icon {
-    background: linear-gradient(135deg, #00bcd4 0%, #00e5ff 100%);
+    background: linear-gradient(135deg, #39ff14 0%, #00ff41 100%);
     color: #ffffff;
     transform: rotateY(180deg);
   }
@@ -301,7 +301,7 @@ const services = [
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #00bcd4;
+    color: #39ff14;
     font-weight: 700;
     font-size: 1rem;
     text-decoration: none;
@@ -311,7 +311,7 @@ const services = [
 
   .service-link:hover {
     gap: 12px;
-    color: #0097a7;
+    color: #0dff00;
   }
 
   .service-link svg {
@@ -325,7 +325,7 @@ const services = [
   .services-cta {
     position: relative;
     padding: 60px 40px;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 100%);
+    background: linear-gradient(135deg, #1a1f0d 0%, #2d3319 100%);
     border-radius: 24px;
     overflow: hidden;
   }
@@ -335,8 +335,8 @@ const services = [
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 20% 50%, rgba(0, 188, 212, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 50%, rgba(0, 229, 255, 0.15) 0%, transparent 50%);
+      radial-gradient(circle at 20% 50%, rgba(57, 255, 20, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(0, 255, 65, 0.15) 0%, transparent 50%);
   }
 
   .cta-content {
@@ -366,19 +366,19 @@ const services = [
     align-items: center;
     gap: 12px;
     padding: 18px 36px;
-    background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+    background: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
     color: #ffffff;
     font-size: 1.1rem;
     font-weight: 700;
     text-decoration: none;
     border-radius: 12px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 40px rgba(0, 188, 212, 0.3);
+    box-shadow: 0 10px 40px rgba(57, 255, 20, 0.3);
   }
 
   .btn-consult:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0, 188, 212, 0.5);
+    box-shadow: 0 20px 60px rgba(57, 255, 20, 0.5);
     gap: 16px;
   }
 
@@ -410,4 +410,147 @@ const services = [
       justify-content: center;
     }
   }
+
+  /* Initial state for scroll animations */
+  .service-card {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .service-card.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-header {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .section-header.animate-in {
+    animation: slideInDown 0.8s ease-out forwards;
+  }
+
+  @keyframes slideInDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .services-cta {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  .services-cta.animate-in {
+    animation: scaleIn 0.6s ease-out forwards;
+  }
+
+  @keyframes scaleIn {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 </style>
+
+<script>
+  // Intersection Observer for scroll-triggered animations
+  const observerOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -100px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('service-card')) {
+          // Stagger animation for service cards
+          const cards = document.querySelectorAll('.service-card');
+          cards.forEach((card, index) => {
+            setTimeout(() => {
+              card.classList.add('animate-in');
+            }, index * 150);
+          });
+        } else {
+          entry.target.classList.add('animate-in');
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe section header
+  const sectionHeader = document.querySelector('.services .section-header');
+  if (sectionHeader) {
+    observer.observe(sectionHeader);
+  }
+
+  // Observe first service card to trigger all
+  const firstCard = document.querySelector('.service-card');
+  if (firstCard) {
+    observer.observe(firstCard);
+  }
+
+  // Observe CTA section
+  const cta = document.querySelector('.services-cta');
+  if (cta) {
+    observer.observe(cta);
+  }
+
+  // Parallax effect for service cards on scroll
+  let scrollTicking = false;
+
+  function updateServiceParallax() {
+    const scrolled = window.pageYOffset;
+    const cards = document.querySelectorAll('.service-card');
+
+    cards.forEach((card, index) => {
+      const rect = card.getBoundingClientRect();
+      const cardTop = rect.top + scrolled;
+      const cardCenter = cardTop + rect.height / 2;
+      const windowCenter = scrolled + window.innerHeight / 2;
+      const distance = cardCenter - windowCenter;
+      const parallaxAmount = distance * 0.05;
+
+      (card as HTMLElement).style.transform = `translateY(${parallaxAmount}px)`;
+    });
+
+    scrollTicking = false;
+  }
+
+  function requestScrollTick() {
+    if (!scrollTicking) {
+      requestAnimationFrame(updateServiceParallax);
+      scrollTicking = true;
+    }
+  }
+
+  // Only enable parallax on desktop
+  if (window.innerWidth > 768) {
+    window.addEventListener('scroll', requestScrollTick, { passive: true });
+  }
+
+  // Hover magnetic effect for service cards
+  const serviceCards = document.querySelectorAll('.service-card');
+  serviceCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const deltaX = (x - centerX) / centerX;
+      const deltaY = (y - centerY) / centerY;
+
+      (card as HTMLElement).style.setProperty('--mouse-x', `${deltaX * 10}px`);
+      (card as HTMLElement).style.setProperty('--mouse-y', `${deltaY * 10}px`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      (card as HTMLElement).style.setProperty('--mouse-x', '0px');
+      (card as HTMLElement).style.setProperty('--mouse-y', '0px');
+    });
+  });
+</script>

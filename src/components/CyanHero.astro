@@ -13,8 +13,8 @@
   <div class="hero-content">
     <div class="hero-badge">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="3" fill="#00e5ff"/>
-        <circle cx="10" cy="10" r="8" stroke="#00e5ff" stroke-width="1" opacity="0.3"/>
+        <circle cx="10" cy="10" r="3" fill="#00ff41"/>
+        <circle cx="10" cy="10" r="8" stroke="#00ff41" stroke-width="1" opacity="0.3"/>
       </svg>
       <span>Established 1998</span>
     </div>
@@ -84,7 +84,16 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #0f1729 100%);
+    background: linear-gradient(135deg, #1a1f0d 0%, #2d3319 50%, #0f1729 100%);
+  }
+
+  /* Parallax layers */
+  .hero-background {
+    will-change: transform;
+  }
+
+  .gradient-orb {
+    will-change: transform, opacity;
   }
 
   .hero-background {
@@ -104,7 +113,7 @@
   .orb-1 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, #00bcd4 0%, transparent 70%);
+    background: radial-gradient(circle, #39ff14 0%, transparent 70%);
     top: -200px;
     left: -200px;
     animation-delay: 0s;
@@ -113,7 +122,7 @@
   .orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, #0097a7 0%, transparent 70%);
+    background: radial-gradient(circle, #0dff00 0%, transparent 70%);
     bottom: -100px;
     right: -100px;
     animation-delay: 7s;
@@ -122,7 +131,7 @@
   .orb-3 {
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, #00e5ff 0%, transparent 70%);
+    background: radial-gradient(circle, #00ff41 0%, transparent 70%);
     top: 50%;
     right: 10%;
     animation-delay: 14s;
@@ -144,8 +153,8 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0, 188, 212, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 188, 212, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
     background-size: 50px 50px;
     mask-image: radial-gradient(ellipse 80% 50% at 50% 50%, black 40%, transparent 100%);
   }
@@ -175,10 +184,10 @@
     align-items: center;
     gap: 10px;
     padding: 8px 20px;
-    background: rgba(0, 229, 255, 0.1);
-    border: 1px solid rgba(0, 229, 255, 0.3);
+    background: rgba(0, 255, 65, 0.1);
+    border: 1px solid rgba(0, 255, 65, 0.3);
     border-radius: 100px;
-    color: #00e5ff;
+    color: #00ff41;
     font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 40px;
@@ -208,7 +217,7 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #00e5ff 0%, #00bcd4 50%, #0097a7 100%);
+    background: linear-gradient(135deg, #00ff41 0%, #39ff14 50%, #0dff00 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -224,7 +233,7 @@
     transform: translateX(-50%);
     width: 200px;
     height: 4px;
-    background: linear-gradient(90deg, transparent, #00bcd4, transparent);
+    background: linear-gradient(90deg, transparent, #39ff14, transparent);
     border-radius: 2px;
   }
 
@@ -257,7 +266,7 @@
   .stat-number {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
-    background: linear-gradient(135deg, #00e5ff 0%, #00bcd4 100%);
+    background: linear-gradient(135deg, #00ff41 0%, #39ff14 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -276,7 +285,7 @@
   .stat-divider {
     width: 1px;
     height: 50px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 188, 212, 0.5), transparent);
+    background: linear-gradient(to bottom, transparent, rgba(57, 255, 20, 0.5), transparent);
   }
 
   .cta-group {
@@ -307,7 +316,7 @@
     inset: 0;
     border-radius: 12px;
     padding: 2px;
-    background: linear-gradient(135deg, #00e5ff, #00bcd4, #0097a7);
+    background: linear-gradient(135deg, #00ff41, #39ff14, #0dff00);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     opacity: 0;
@@ -315,26 +324,26 @@
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+    background: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
     color: #ffffff;
-    box-shadow: 0 10px 40px rgba(0, 188, 212, 0.3);
+    box-shadow: 0 10px 40px rgba(57, 255, 20, 0.3);
   }
 
   .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 20px 60px rgba(0, 188, 212, 0.5);
+    box-shadow: 0 20px 60px rgba(57, 255, 20, 0.5);
   }
 
   .btn-secondary {
     background: rgba(255, 255, 255, 0.05);
-    color: #00e5ff;
-    border: 2px solid rgba(0, 229, 255, 0.3);
+    color: #00ff41;
+    border: 2px solid rgba(0, 255, 65, 0.3);
     backdrop-filter: blur(10px);
   }
 
   .btn-secondary:hover {
-    background: rgba(0, 229, 255, 0.1);
-    border-color: rgba(0, 229, 255, 0.6);
+    background: rgba(0, 255, 65, 0.1);
+    border-color: rgba(0, 255, 65, 0.6);
     transform: translateY(-3px);
   }
 
@@ -391,7 +400,7 @@
   .scroll-line {
     width: 2px;
     height: 40px;
-    background: linear-gradient(to bottom, #00bcd4, transparent);
+    background: linear-gradient(to bottom, #39ff14, transparent);
     animation: scrollMove 2s ease-in-out infinite;
   }
 
@@ -445,3 +454,138 @@
     }
   }
 </style>
+
+<script>
+  // Parallax scroll effect synchronized with page scroll
+  let ticking = false;
+
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero') as HTMLElement;
+
+    if (!hero) return;
+
+    const heroHeight = hero.offsetHeight;
+    const scrollProgress = Math.min(scrolled / heroHeight, 1);
+
+    // Parallax background orbs
+    const orbs = document.querySelectorAll('.gradient-orb') as NodeListOf<HTMLElement>;
+    orbs.forEach((orb, index) => {
+      const speed = 0.3 + (index * 0.1);
+      orb.style.transform = `translateY(${scrolled * speed}px)`;
+      orb.style.opacity = `${0.4 - scrollProgress * 0.2}`;
+    });
+
+    // Parallax grid overlay
+    const grid = document.querySelector('.grid-overlay') as HTMLElement;
+    if (grid) {
+      grid.style.transform = `translateY(${scrolled * 0.2}px)`;
+    }
+
+    // Fade out hero content as user scrolls
+    const heroContent = document.querySelector('.hero-content') as HTMLElement;
+    if (heroContent) {
+      heroContent.style.opacity = `${1 - scrollProgress * 0.5}`;
+      heroContent.style.transform = `translateY(${scrolled * 0.15}px)`;
+    }
+
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Animated counter for stats
+  function animateCounter(element: HTMLElement, target: number, duration: number = 2000) {
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(start + (target - start) * easeOutQuart);
+
+      element.textContent = current.toString() + (target >= 100 ? '%' : '+');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Intersection Observer for scroll-triggered animations
+  const observerOptions = {
+    threshold: 0.2,
+    rootMargin: '0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Animate stat numbers
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach((stat, index) => {
+          setTimeout(() => {
+            const text = stat.textContent || '';
+            const value = parseInt(text.replace(/\D/g, ''));
+            animateCounter(stat as HTMLElement, value, 2000);
+          }, index * 200);
+        });
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) {
+    observer.observe(heroStats);
+  }
+
+  // Stagger animation for CTA buttons
+  const buttons = document.querySelectorAll('.btn');
+  buttons.forEach((btn, index) => {
+    (btn as HTMLElement).style.animationDelay = `${1 + index * 0.1}s`;
+  });
+
+  // Mouse move parallax effect for hero content
+  let mouseX = 0;
+  let mouseY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 20;
+  });
+
+  function animateMouseParallax() {
+    currentX += (mouseX - currentX) * 0.1;
+    currentY += (mouseY - currentY) * 0.1;
+
+    const badge = document.querySelector('.hero-badge') as HTMLElement;
+    if (badge) {
+      badge.style.transform = `translate(${currentX * 0.5}px, ${currentY * 0.5}px)`;
+    }
+
+    const title = document.querySelector('.hero-title') as HTMLElement;
+    if (title) {
+      title.style.transform = `translate(${currentX * 0.3}px, ${currentY * 0.3}px)`;
+    }
+
+    requestAnimationFrame(animateMouseParallax);
+  }
+
+  animateMouseParallax();
+</script>
