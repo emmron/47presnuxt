@@ -1,171 +1,23 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import Hero from '../components/Hero.astro';
-import NewsCard from '../components/NewsCard.astro';
-import MarketPulse from '../components/MarketPulse.astro';
-import DiscussionThread from '../components/DiscussionThread.astro';
-import EventCard from '../components/EventCard.astro';
-import ResourceCard from '../components/ResourceCard.astro';
-import { newsItems, marketMetrics, discussionThreads, events, resources } from '../data/content';
+import CyanHero from '../components/CyanHero.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
 ---
 <MainLayout>
-  <Hero onCtaClick="#discussion" />
-
-  <section id="news">
-    <div class="container">
-      <div class="section-heading">
-        <div>
-          <span class="tag">Latest headlines</span>
-          <h2>Perth news you can trade on today</h2>
-        </div>
-        <p>
-          Curated dispatches from WA journalists, policy desks, and OTC traders with a direct impact on
-          our local crypto economy.
-        </p>
-      </div>
-      <div class="grid news-grid">
-        {newsItems.map((item) => (
-          <NewsCard {...item} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <MarketPulse metrics={marketMetrics} />
-
-  <section id="community">
-    <div class="container">
-      <div class="section-heading">
-        <div>
-          <span class="tag">Community</span>
-          <h2>Who's building crypto in Perth?</h2>
-        </div>
-        <p>
-          From mining collectives to DeFi founders, meet the people and events powering Western
-          Australia's crypto innovation scene.
-        </p>
-      </div>
-      <div class="grid community-grid">
-        {events.map((event) => (
-          <EventCard {...event} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section id="discussion">
-    <div class="container">
-      <div class="section-heading">
-        <div>
-          <span class="tag">Discussion</span>
-          <h2>Live threads from the Perth Crypto Hub</h2>
-        </div>
-        <p>
-          Jump into the conversation or share your alpha with traders, builders, accountants, and
-          policymakers right here in WA.
-        </p>
-      </div>
-      <div class="grid discussion-grid">
-        {discussionThreads.map((thread) => (
-          <DiscussionThread {...thread} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section id="subscribe">
-    <div class="container">
-      <div class="subscribe card">
-        <div>
-          <span class="tag">Daily email briefing</span>
-          <h2>Stay in sync with Perth's crypto signal</h2>
-          <p>
-            Get pre-market insights, regulatory updates, and event highlights delivered to your inbox at
-            7am AWST, curated by our local editorial team.
-          </p>
-        </div>
-        <form class="subscribe-form">
-          <label>
-            <span>Email address</span>
-            <input type="email" name="email" placeholder="you@perthcrypto.com" required />
-          </label>
-          <button class="button-primary" type="submit">Subscribe for free</button>
-          <small>By subscribing you agree to our privacy policy. No spam, ever.</small>
-        </form>
-      </div>
-      <div class="resources">
-        <h3>Essential WA crypto resources</h3>
-        <div class="grid resource-grid">
-          {resources.map((resource) => (
-            <ResourceCard {...resource} />
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
+  <CyanHero />
+  <Services />
+  <About />
+  <Contact />
 </MainLayout>
 
 <style>
-  .news-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  :global(html) {
+    scroll-behavior: smooth;
   }
 
-  .community-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  }
-
-  .discussion-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-
-  .subscribe {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 4rem;
-    border: 1px solid rgba(59, 245, 255, 0.22);
-  }
-
-  .subscribe h2 {
-    margin-top: 1rem;
-  }
-
-  .subscribe-form {
-    display: grid;
-    gap: 1rem;
-    align-content: start;
-  }
-
-  .subscribe-form label {
-    display: grid;
-    gap: 0.5rem;
-    color: rgba(245, 247, 255, 0.7);
-  }
-
-  .subscribe-form input {
-    padding: 0.85rem 1rem;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(7, 9, 20, 0.85);
-    color: var(--color-text);
-  }
-
-  .subscribe-form small {
-    color: rgba(245, 247, 255, 0.45);
-  }
-
-  .resources {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .resource-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-
-  @media (max-width: 768px) {
-    .subscribe {
-      margin-bottom: 3rem;
-    }
+  :global(body) {
+    overflow-x: hidden;
   }
 </style>
