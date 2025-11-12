@@ -1,0 +1,145 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  class: className = ''
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const baseClasses = `btn btn-${variant} btn-${size} ${className}`;
+---
+
+<Tag
+  class={baseClasses}
+  href={href}
+  type={!href ? type : undefined}
+  {...Astro.props}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+  }
+
+  .btn:focus-visible {
+    outline: 3px solid #00ff41;
+    outline-offset: 4px;
+  }
+
+  /* Sizes */
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn-md {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+
+  .btn-lg {
+    padding: 16px 32px;
+    font-size: 1.05rem;
+  }
+
+  /* Primary variant */
+  .btn-primary {
+    background: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
+    color: #0a0e0a;
+    box-shadow:
+      0 4px 15px rgba(57, 255, 20, 0.4),
+      0 8px 30px rgba(57, 255, 20, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 20px rgba(57, 255, 20, 0.5),
+      0 12px 40px rgba(57, 255, 20, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+    filter: brightness(1.1);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Secondary variant */
+  .btn-secondary {
+    background: linear-gradient(135deg, #1a1f0d 0%, #2d3319 100%);
+    color: #39ff14;
+    border: 1px solid rgba(57, 255, 20, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #2d3319 0%, #1a1f0d 100%);
+    border-color: #39ff14;
+    box-shadow: 0 6px 20px rgba(57, 255, 20, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0);
+  }
+
+  /* Outline variant */
+  .btn-outline {
+    background: transparent;
+    color: #39ff14;
+    border: 2px solid #39ff14;
+  }
+
+  .btn-outline:hover {
+    background: rgba(57, 255, 20, 0.1);
+    border-color: #00ff41;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+  }
+
+  .btn-outline:active {
+    background: rgba(57, 255, 20, 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn:hover {
+      transform: none;
+    }
+
+    .btn:active {
+      transform: none;
+    }
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+</style>

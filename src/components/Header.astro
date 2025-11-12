@@ -1,0 +1,1271 @@
+---
+// Header component for site navigation
+---
+
+<header class="site-header" id="header">
+  <canvas class="header-canvas" id="headerCanvas"></canvas>
+
+  <div class="morphing-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="header-gradient-border"></div>
+  <div class="header-glow"></div>
+  <div class="scan-line"></div>
+
+  <div class="container header-inner">
+    <a class="brand" href="/" id="brand">
+      <div class="brand-icon">
+        <div class="icon-rings">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+        </div>
+        <div class="icon-glow-effect"></div>
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <circle cx="20" cy="20" r="18" stroke="url(#brandGradient)" stroke-width="2"/>
+          <path d="M20 8v24M12 20h16" stroke="url(#brandGradient)" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="brandGradient" x1="0" y1="0" x2="40" y2="40">
+              <stop offset="0%" stop-color="#00ff41"/>
+              <stop offset="100%" stop-color="#39ff14"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-logo">
+          <span class="letter" data-letter="C">C</span>
+          <span class="letter" data-letter="Y">Y</span>
+          <span class="letter" data-letter="A">A</span>
+          <span class="letter" data-letter="N">N</span>
+          <span class="letter" data-letter="W">W</span>
+          <span class="letter" data-letter="E">E</span>
+          <span class="letter" data-letter="B">B</span>
+        </span>
+        <span class="brand-tagline">
+          <span class="tagline-text">Digital Solutions</span>
+          <span class="tagline-glitch" aria-hidden="true">Digital Solutions</span>
+        </span>
+      </div>
+    </a>
+
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="#services" class="nav-link" data-index="0">
+        <span class="nav-bg"></span>
+        <span class="nav-ripple"></span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1l1.5 4.5L14 6.5l-4.5 1.5L8 12.5l-1.5-4.5L2 6.5l4.5-1.5L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <span>Services</span>
+      </a>
+      <a href="#about" class="nav-link" data-index="1">
+        <span class="nav-bg"></span>
+        <span class="nav-ripple"></span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 6v5m0-7v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>About</span>
+      </a>
+      <a href="#contact" class="nav-link cta-link" data-index="2">
+        <span class="cta-shimmer"></span>
+        <span class="cta-pulse"></span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M14 1L6 9m8-8L8 15l-2-6-6-2 14-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Get Started</span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10m-4-4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const canvas = document.getElementById('headerCanvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  const header = document.getElementById('header')!;
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle') as HTMLButtonElement;
+  const mainNav = document.getElementById('mainNav')!;
+
+  let particles: Particle[] = [];
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetMouseX = 0;
+  let targetMouseY = 0;
+  let animationFrameId: number;
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = header.offsetHeight;
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Particle {
+    x: number = 0;
+    y: number = 0;
+    size: number = 0;
+    baseSpeedX: number = 0;
+    baseSpeedY: number = 0;
+    speedX: number = 0;
+    speedY: number = 0;
+    opacity: number = 0;
+    hue: number = 0;
+
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 3 + 1;
+      this.baseSpeedX = Math.random() * 0.5 - 0.25;
+      this.baseSpeedY = Math.random() * 0.5 - 0.25;
+      this.speedX = this.baseSpeedX;
+      this.speedY = this.baseSpeedY;
+      this.opacity = Math.random() * 0.6 + 0.2;
+      this.hue = Math.random() * 20 + 110; // Green hue range
+    }
+
+    update() {
+      if (prefersReducedMotion) {
+        return; // Skip animations if reduced motion preferred
+      }
+
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const maxDistance = 150;
+
+      if (distance < maxDistance) {
+        const force = (maxDistance - distance) / maxDistance;
+        const angle = Math.atan2(dy, dx);
+        this.speedX = this.baseSpeedX - Math.cos(angle) * force * 2;
+        this.speedY = this.baseSpeedY - Math.sin(angle) * force * 2;
+      } else {
+        this.speedX += (this.baseSpeedX - this.speedX) * 0.1;
+        this.speedY += (this.baseSpeedY - this.speedY) * 0.1;
+      }
+
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      if (this.x > canvas.width) this.x = 0;
+      if (this.x < 0) this.x = canvas.width;
+      if (this.y > canvas.height) this.y = 0;
+      if (this.y < 0) this.y = canvas.height;
+    }
+
+    draw() {
+      const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+      gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, ${this.opacity})`);
+      gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`);
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Only create particles if motion is not reduced
+  if (!prefersReducedMotion) {
+    for (let i = 0; i < 80; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!prefersReducedMotion) {
+      // Smooth mouse position
+      mouseX += (targetMouseX - mouseX) * 0.1;
+      mouseY += (targetMouseY - mouseY) * 0.1;
+
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+
+      // Draw connections with gradient
+      particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            const opacity = 0.15 * (1 - distance / 150);
+            const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+            gradient.addColorStop(0, `hsla(${p1.hue}, 100%, 60%, ${opacity})`);
+            gradient.addColorStop(1, `hsla(${p2.hue}, 100%, 60%, ${opacity})`);
+
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        });
+      });
+    }
+
+    animationFrameId = requestAnimationFrame(animateParticles);
+  }
+
+  animateParticles();
+
+  // Mouse tracking (throttled)
+  let mouseThrottleTimeout: number | null = null;
+  header.addEventListener('mousemove', (e) => {
+    if (!mouseThrottleTimeout && !prefersReducedMotion) {
+      const rect = header.getBoundingClientRect();
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY - rect.top;
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      header.style.setProperty('--mouse-x', `${x}%`);
+      header.style.setProperty('--mouse-y', `${y}%`);
+
+      mouseThrottleTimeout = window.setTimeout(() => {
+        mouseThrottleTimeout = null;
+      }, 16); // ~60fps
+    }
+  });
+
+  // Scroll effects
+  let lastScroll = 0;
+  const scrollThreshold = 50;
+
+  function handleScroll() {
+    const currentScroll = window.pageYOffset;
+    const scrollPercent = Math.min(currentScroll / 500, 1);
+
+    if (currentScroll > scrollThreshold) {
+      header.classList.add('scrolled');
+      header.style.setProperty('--scroll-progress', String(scrollPercent));
+    } else {
+      header.classList.remove('scrolled');
+    }
+
+    if (currentScroll > lastScroll && currentScroll > 200) {
+      header.classList.add('hidden');
+    } else {
+      header.classList.remove('hidden');
+    }
+
+    lastScroll = currentScroll;
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // Ripple effect on nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(this: HTMLElement, e: MouseEvent) {
+      const ripple = this.querySelector('.nav-ripple') as HTMLElement;
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      ripple.style.animation = 'none';
+
+      setTimeout(() => {
+        ripple.style.animation = 'ripple 0.6s ease-out';
+      }, 10);
+    });
+  });
+
+  // Magnetic effect for nav links (disabled on reduced motion)
+  if (!prefersReducedMotion) {
+    const navLinks = document.querySelectorAll<HTMLElement>('.nav-link:not(.cta-link)');
+    navLinks.forEach(link => {
+      link.addEventListener('mousemove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        link.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+      });
+
+      link.addEventListener('mouseleave', () => {
+        link.style.transform = '';
+      });
+    });
+  }
+
+  // Glitch effect on brand hover (disabled on reduced motion)
+  const brand = document.getElementById('brand')!;
+  const letters = document.querySelectorAll<HTMLElement>('.letter');
+
+  if (!prefersReducedMotion) {
+    brand.addEventListener('mouseenter', () => {
+      letters.forEach((letter, index) => {
+        setTimeout(() => {
+          letter.style.animation = 'glitch 0.3s ease';
+          setTimeout(() => {
+            letter.style.animation = 'letterBounce 2s ease-in-out infinite';
+            letter.style.animationDelay = `${index * 0.05}s`;
+          }, 300);
+        }, index * 30);
+      });
+    });
+  }
+
+  // Staggered animation on load
+  const allNavLinks = document.querySelectorAll<HTMLElement>('.nav-link');
+  allNavLinks.forEach((link, index) => {
+    link.style.animationDelay = `${0.2 + index * 0.15}s`;
+  });
+
+  letters.forEach((letter, index) => {
+    letter.style.animationDelay = `${index * 0.05}s`;
+  });
+
+  // Mobile menu
+  mobileMenuToggle?.addEventListener('click', () => {
+    const isActive = mainNav.classList.toggle('active');
+    mobileMenuToggle.classList.toggle('active');
+    document.body.classList.toggle('menu-open');
+    mobileMenuToggle.setAttribute('aria-expanded', String(isActive));
+  });
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mainNav?.classList.remove('active');
+      mobileMenuToggle?.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mainNav?.classList.contains('active')) {
+      mainNav.classList.remove('active');
+      mobileMenuToggle?.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // 3D tilt effect on header (disabled on reduced motion)
+  if (!prefersReducedMotion) {
+    header.addEventListener('mousemove', (e) => {
+      const rect = header.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / centerY * -2;
+      const rotateY = (x - centerX) / centerX * 2;
+
+      header.style.setProperty('--tilt-x', `${rotateX}deg`);
+      header.style.setProperty('--tilt-y', `${rotateY}deg`);
+    });
+
+    header.addEventListener('mouseleave', () => {
+      header.style.setProperty('--tilt-x', '0deg');
+      header.style.setProperty('--tilt-y', '0deg');
+    });
+  }
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+  });
+</script>
+
+<style>
+  /* ============================================
+     HEADER BASE STRUCTURE
+     ============================================ */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    --scroll-progress: 0;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    perspective: 1000px;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 20px;
+    gap: 3rem;
+    position: relative;
+    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transition: transform 0.3s ease-out;
+    transform-style: preserve-3d;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .site-header.scrolled .header-inner {
+    padding: 1rem 20px;
+  }
+
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: CANVAS
+     ============================================ */
+  .header-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.4;
+    transition: opacity 0.6s;
+  }
+
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: MORPHING BLOBS
+     ============================================ */
+  .morphing-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.3;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: blobMove 20s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob {
+      animation: none;
+    }
+  }
+
+  .blob-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.4) 0%, transparent 70%);
+    top: -200px;
+    left: -200px;
+    animation-delay: 0s;
+  }
+
+  .blob-2 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.3) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    animation-delay: 7s;
+  }
+
+  .blob-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(13, 255, 0, 0.3) 0%, transparent 70%);
+    bottom: -150px;
+    left: 50%;
+    animation-delay: 14s;
+  }
+
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: SCAN LINES
+     ============================================ */
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(0, 255, 65, 0.8),
+      rgba(57, 255, 20, 0.8),
+      transparent
+    );
+    animation: scan 3s ease-in-out infinite;
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scan-line {
+      animation: none;
+    }
+  }
+
+  /* ============================================
+     HEADER BACKGROUND EFFECTS: GRADIENTS
+     ============================================ */
+  .header-gradient-border {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 255, 65, 0.6),
+      rgba(57, 255, 20, 0.6),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: gradientFlow 3s linear infinite;
+    opacity: 0;
+    height: 2px;
+    bottom: 0;
+    top: auto;
+    transition: opacity 0.4s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-gradient-border {
+      animation: none;
+    }
+  }
+
+  .header-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle 400px at var(--mouse-x) var(--mouse-y),
+      rgba(0, 255, 65, 0.2) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .site-header:hover .header-glow {
+    opacity: 1;
+  }
+
+  /* ============================================
+     HEADER STATES: SCROLLED
+     ============================================ */
+  .site-header.scrolled .header-canvas {
+    opacity: 0.7;
+  }
+
+  .site-header.scrolled .header-gradient-border {
+    opacity: 1;
+  }
+
+  .site-header.scrolled {
+    background: rgba(26, 31, 13, calc(0.9 + var(--scroll-progress) * 0.05));
+    border-bottom-color: rgba(0, 255, 65, 0.3);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ============================================
+     HEADER STATES: HIDDEN
+     ============================================ */
+  .site-header.hidden {
+    transform: translateY(-100%);
+  }
+
+  /* ============================================
+     BRAND/LOGO: BASE STYLES
+     ============================================ */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 10;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .brand:hover {
+    transform: scale(1.08) translateZ(20px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  /* ============================================
+     BRAND/LOGO: ICON AND RINGS
+     ============================================ */
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .brand-icon svg {
+    width: 100%;
+    height: 100%;
+    filter:
+      drop-shadow(0 0 15px rgba(0, 255, 65, 0.8))
+      drop-shadow(0 0 30px rgba(57, 255, 20, 0.4));
+    animation: iconFloat 4s ease-in-out infinite;
+    transition: all 0.4s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-icon svg {
+      animation: none;
+    }
+  }
+
+  .brand:hover .brand-icon svg {
+    filter:
+      drop-shadow(0 0 20px rgba(0, 255, 65, 1))
+      drop-shadow(0 0 40px rgba(57, 255, 20, 0.6));
+  }
+
+  .icon-glow-effect {
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.4s;
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon-glow-effect {
+      animation: none;
+    }
+  }
+
+  .brand:hover .icon-glow-effect {
+    opacity: 1;
+  }
+
+  .icon-rings {
+    position: absolute;
+    inset: -10px;
+  }
+
+  .ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(0, 255, 65, 0.4);
+    border-radius: 50%;
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring {
+      animation: none;
+    }
+  }
+
+  .ring-1 {
+    animation-delay: 0s;
+  }
+
+  .ring-2 {
+    animation-delay: 1s;
+  }
+
+  .ring-3 {
+    animation-delay: 2s;
+  }
+
+  /* ============================================
+     BRAND/LOGO: TEXT AND LETTERS
+     ============================================ */
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .brand-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    line-height: 1;
+    display: flex;
+    position: relative;
+  }
+
+  .letter {
+    display: inline-block;
+    animation: letterBounce 2s ease-in-out infinite;
+    transform-origin: center bottom;
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .letter {
+      animation: none;
+    }
+  }
+
+  .letter::before {
+    content: attr(data-letter);
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #00ff41, #39ff14);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .letter:hover::before {
+    opacity: 1;
+  }
+
+  /* ============================================
+     BRAND/LOGO: TAGLINE
+     ============================================ */
+  .brand-tagline {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .tagline-text {
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.4s;
+  }
+
+  .site-header.scrolled .tagline-text {
+    color: #00ff41;
+  }
+
+  .tagline-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #00ff41;
+    opacity: 0;
+    clip-path: inset(0);
+  }
+
+  .brand:hover .tagline-glitch {
+    animation: glitchText 0.6s infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand:hover .tagline-glitch {
+      animation: none;
+    }
+  }
+
+  /* ============================================
+     NAVIGATION: BASE STYLES
+     ============================================ */
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    font-weight: 600;
+    position: relative;
+    padding: 12px 20px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: navFadeIn 0.8s ease-out forwards;
+    border-radius: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* ============================================
+     NAVIGATION: BACKGROUND AND RIPPLE
+     ============================================ */
+  .nav-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.15) 0%, transparent 70%);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .nav-ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 255, 65, 0.6);
+    transform: scale(0);
+    pointer-events: none;
+  }
+
+  .nav-link:hover .nav-bg {
+    opacity: 1;
+  }
+
+  /* ============================================
+     NAVIGATION: ICONS AND HOVER EFFECTS
+     ============================================ */
+  .nav-link svg:not(.arrow) {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link:hover svg:not(.arrow) {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  .nav-link:hover {
+    color: #00ff41;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff41, #39ff14, transparent);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+  }
+
+  .nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  .nav-link:focus-visible {
+    outline: 2px solid #00ff41;
+    outline-offset: 4px;
+  }
+
+  /* ============================================
+     CTA BUTTON: BASE STYLES
+     ============================================ */
+  .nav-link.cta-link {
+    background: linear-gradient(135deg, #39ff14 0%, #0dff00 100%);
+    color: #0a0e0a;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    box-shadow:
+      0 4px 15px rgba(57, 255, 20, 0.4),
+      0 8px 30px rgba(57, 255, 20, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(0, 255, 65, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-link.cta-link::after {
+    display: none;
+  }
+
+  /* ============================================
+     CTA BUTTON: PULSE AND SHIMMER EFFECTS
+     ============================================ */
+  .cta-pulse {
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 255, 65, 0.8);
+    animation: ctaPulse 2s ease-out infinite;
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-pulse {
+      animation: none;
+    }
+  }
+
+  .cta-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 3s infinite;
+    transform: skewX(-20deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-shimmer {
+      animation: none;
+    }
+  }
+
+  /* ============================================
+     CTA BUTTON: HOVER STATES
+     ============================================ */
+  .nav-link.cta-link .arrow {
+    opacity: 1;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link.cta-link:hover {
+    transform: translateY(-4px) scale(1.06);
+    box-shadow:
+      0 6px 20px rgba(57, 255, 20, 0.5),
+      0 12px 40px rgba(57, 255, 20, 0.3),
+      0 20px 60px rgba(57, 255, 20, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+    color: #0a0e0a;
+    filter: brightness(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link.cta-link:hover {
+      transform: none;
+    }
+  }
+
+  .nav-link.cta-link:hover .arrow {
+    transform: translateX(6px);
+  }
+
+  /* ============================================
+     MOBILE MENU: TOGGLE BUTTON
+     ============================================ */
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .mobile-menu-toggle:focus-visible {
+    outline: 2px solid #00ff41;
+    outline-offset: 4px;
+  }
+
+  .mobile-menu-toggle span {
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, #00ff41, #39ff14);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  }
+
+  .mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ============================================
+     KEYFRAME ANIMATIONS
+     ============================================ */
+  @keyframes blobMove {
+    0%, 100% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translate(50px, -30px) scale(1.1) rotate(90deg);
+    }
+    50% {
+      transform: translate(-30px, 40px) scale(0.9) rotate(180deg);
+    }
+    75% {
+      transform: translate(40px, 20px) scale(1.05) rotate(270deg);
+    }
+  }
+
+  @keyframes scan {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes ringPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.8);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes iconFloat {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-4px) rotate(5deg);
+    }
+    75% {
+      transform: translateY(2px) rotate(-5deg);
+    }
+  }
+
+  @keyframes letterBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes glitch {
+    0%, 100% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+    }
+    60% {
+      transform: translate(2px, 2px);
+    }
+    80% {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  @keyframes glitchText {
+    0% {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+    }
+    20% {
+      opacity: 0.8;
+      clip-path: inset(0 0 80% 0);
+      transform: translateX(-2px);
+    }
+    40% {
+      opacity: 0;
+      clip-path: inset(0 0 60% 0);
+    }
+    60% {
+      opacity: 0.8;
+      clip-path: inset(0 0 40% 0);
+      transform: translateX(2px);
+    }
+    80% {
+      opacity: 0;
+      clip-path: inset(0 0 20% 0);
+    }
+    100% {
+      opacity: 0;
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes navFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-30px) rotateX(-90deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ctaPulse {
+    0% {
+      transform: scale(0.95);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.1);
+      opacity: 0;
+    }
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  /* ============================================
+     MEDIA QUERIES
+     ============================================ */
+  @media (max-width: 968px) {
+    .mobile-menu-toggle {
+      display: flex;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(320px, 100%);
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1f0d 0%, #2d3319 100%);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 100px 30px 30px;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+    }
+
+    nav.active {
+      right: 0;
+    }
+
+    .nav-link {
+      width: 100%;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 1.05rem;
+    }
+
+    .nav-link svg:not(.arrow) {
+      opacity: 0.8;
+      transform: translateX(0);
+    }
+
+    .nav-link.cta-link {
+      margin-top: 20px;
+      justify-content: center;
+      border-bottom: none;
+    }
+
+    .header-inner {
+      padding: 1rem 20px;
+      transform: none;
+    }
+
+    .morphing-bg {
+      opacity: 0.2;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .brand-logo {
+      font-size: 1.3rem;
+    }
+
+    .brand-tagline {
+      font-size: 0.65rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    nav {
+      padding: 80px 20px 20px;
+    }
+  }
+</style>

@@ -1,0 +1,212 @@
+---
+// Footer component for site-wide footer
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">CYANWEB</span>
+      <p>Empowering businesses with innovative digital solutions since 1998.</p>
+      <p class="footer-location" aria-label="Location">📍 Morley, Perth, Western Australia</p>
+    </div>
+    <nav class="footer-section" aria-labelledby="footer-services-heading">
+      <h4 id="footer-services-heading">Services</h4>
+      <div class="footer-links">
+        <a href="#services">Web Development</a>
+        <a href="#services">Digital Marketing</a>
+        <a href="#services">eCommerce Solutions</a>
+        <a href="#services">Technology Consulting</a>
+      </div>
+    </nav>
+    <nav class="footer-section" aria-labelledby="footer-contact-heading">
+      <h4 id="footer-contact-heading">Contact</h4>
+      <div class="footer-links">
+        <a href="tel:0431757449" aria-label="Call 0431 757 449">0431 757 449</a>
+        <a href="https://www.cyanweb.com.au" target="_blank" rel="noopener noreferrer">www.cyanweb.com.au</a>
+        <a href="https://www.facebook.com/therealcyanweb/" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Facebook">Facebook</a>
+        <a href="https://www.linkedin.com/in/jonathan-huckabee-53b39517a/" target="_blank" rel="noopener noreferrer" aria-label="Connect on LinkedIn">LinkedIn</a>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-meta">© {currentYear} Cyanweb Solutions Pty Ltd. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  /* ============================================
+     FOOTER STYLES: BASE
+     ============================================ */
+  .site-footer {
+    margin-top: 0;
+    background: linear-gradient(135deg, #1a1509 0%, #2d2414 100%);
+    color: white;
+    padding: 80px 20px 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ============================================
+     FOOTER STYLES: LAYOUT
+     ============================================ */
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ============================================
+     FOOTER STYLES: BRAND SECTION
+     ============================================ */
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #39ff14 0%, #00ff41 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .footer-brand p {
+    color: #b4b8c5;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 350px;
+  }
+
+  .footer-location {
+    color: #39ff14 !important;
+    font-weight: 500;
+  }
+
+  /* ============================================
+     FOOTER STYLES: LINKS AND SECTIONS
+     ============================================ */
+  .footer-section h4 {
+    color: #39ff14;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    color: #b4b8c5;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    width: fit-content;
+  }
+
+  .footer-links a:hover {
+    color: #39ff14;
+    padding-left: 8px;
+  }
+
+  .footer-links a:focus-visible {
+    outline: 2px solid #39ff14;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .footer-links a::before {
+    content: '→';
+    position: absolute;
+    left: -20px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #39ff14;
+  }
+
+  .footer-links a:hover::before {
+    opacity: 1;
+    left: -12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-links a:hover {
+      padding-left: 0;
+    }
+
+    .footer-links a::before {
+      display: none;
+    }
+  }
+
+  /* ============================================
+     FOOTER STYLES: BOTTOM
+     ============================================ */
+  .footer-bottom {
+    padding: 30px 20px;
+  }
+
+  .footer-meta {
+    text-align: center;
+    color: rgba(180, 184, 197, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* ============================================
+     MEDIA QUERIES
+     ============================================ */
+  @media (max-width: 968px) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .footer-brand p {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .site-footer {
+      padding: 60px 20px 0;
+    }
+
+    .footer-inner {
+      gap: 35px;
+      padding-bottom: 35px;
+    }
+
+    .footer-logo {
+      font-size: 1.6rem;
+    }
+
+    .footer-section h4 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .footer-bottom {
+      padding: 25px 20px;
+    }
+
+    .footer-meta {
+      font-size: 0.85rem;
+    }
+  }
+</style>
