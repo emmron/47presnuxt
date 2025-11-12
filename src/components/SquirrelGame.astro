@@ -1,0 +1,431 @@
+---
+// Squirrel Shooting Game Component
+---
+
+<div id="squirrel-game" class="squirrel-game-container">
+  <div id="score-display" class="score-display">Squirrels: 0</div>
+  <div id="crosshair" class="crosshair"></div>
+</div>
+
+<style>
+  .squirrel-game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    cursor: crosshair;
+  }
+
+  .score-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 255, 200, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgb(0, 255, 200);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 18px;
+    color: rgb(0, 255, 200);
+    pointer-events: auto;
+    z-index: 10000;
+    box-shadow: 0 0 20px rgba(0, 255, 200, 0.3),
+                inset 0 0 20px rgba(0, 255, 200, 0.1);
+    text-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+  }
+
+  .crosshair {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 10001;
+    display: none;
+  }
+
+  .crosshair::before,
+  .crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgb(0, 255, 200);
+    box-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+  }
+
+  .crosshair::before {
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+  }
+
+  .crosshair::after {
+    top: 50%;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+
+  .crosshair.active {
+    display: block;
+  }
+
+  .squirrel {
+    position: fixed;
+    font-size: 48px;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    user-select: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  .squirrel:hover {
+    transform: scale(1.15);
+  }
+
+  .squirrel.hit {
+    animation: explode 0.5s ease-out forwards;
+  }
+
+  @keyframes explode {
+    0% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.5) rotate(180deg);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .hit-effect {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    font-size: 32px;
+    font-weight: bold;
+    color: rgb(0, 255, 200);
+    text-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+    animation: hitScore 1s ease-out forwards;
+  }
+
+  @keyframes hitScore {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-50px) scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  .particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: rgb(0, 255, 200);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .squirrel {
+      font-size: 36px;
+    }
+
+    .score-display {
+      font-size: 16px;
+      padding: 10px 20px;
+    }
+
+    .crosshair {
+      width: 30px;
+      height: 30px;
+    }
+  }
+</style>
+
+<script>
+  interface Squirrel {
+    id: number;
+    element: HTMLElement;
+    x: number;
+    y: number;
+    speedX: number;
+    speedY: number;
+    directionX: number;
+    directionY: number;
+  }
+
+  class SquirrelGame {
+    private container: HTMLElement;
+    private scoreDisplay: HTMLElement;
+    private crosshair: HTMLElement;
+    private squirrels: Squirrel[] = [];
+    private score: number = 0;
+    private squirrelId: number = 0;
+    private animationFrame: number | null = null;
+    private spawnInterval: number | null = null;
+
+    constructor() {
+      this.container = document.getElementById('squirrel-game')!;
+      this.scoreDisplay = document.getElementById('score-display')!;
+      this.crosshair = document.getElementById('crosshair')!;
+
+      this.init();
+    }
+
+    init() {
+      // Show crosshair
+      document.addEventListener('mousemove', (e) => {
+        this.crosshair.classList.add('active');
+        this.crosshair.style.left = `${e.clientX - 20}px`;
+        this.crosshair.style.top = `${e.clientY - 20}px`;
+      });
+
+      // Hide crosshair when mouse leaves
+      document.addEventListener('mouseleave', () => {
+        this.crosshair.classList.remove('active');
+      });
+
+      // Start spawning squirrels
+      this.startSpawning();
+
+      // Start animation loop
+      this.animate();
+    }
+
+    startSpawning() {
+      // Spawn initial squirrels
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => this.spawnSquirrel(), i * 1000);
+      }
+
+      // Continue spawning periodically
+      this.spawnInterval = window.setInterval(() => {
+        if (this.squirrels.length < 8) {
+          this.spawnSquirrel();
+        }
+      }, 3000);
+    }
+
+    spawnSquirrel() {
+      const squirrelEmojis = ['🐿️', '🐿️', '🐿️'];
+      const emoji = squirrelEmojis[Math.floor(Math.random() * squirrelEmojis.length)];
+
+      const element = document.createElement('div');
+      element.className = 'squirrel';
+      element.textContent = emoji;
+      element.setAttribute('role', 'button');
+      element.setAttribute('aria-label', 'Click to shoot squirrel');
+
+      // Random spawn position (edges of screen)
+      const side = Math.floor(Math.random() * 4);
+      let x: number, y: number, directionX: number, directionY: number;
+
+      switch (side) {
+        case 0: // top
+          x = Math.random() * window.innerWidth;
+          y = -60;
+          directionX = (Math.random() - 0.5) * 2;
+          directionY = 1;
+          break;
+        case 1: // right
+          x = window.innerWidth + 60;
+          y = Math.random() * window.innerHeight;
+          directionX = -1;
+          directionY = (Math.random() - 0.5) * 2;
+          break;
+        case 2: // bottom
+          x = Math.random() * window.innerWidth;
+          y = window.innerHeight + 60;
+          directionX = (Math.random() - 0.5) * 2;
+          directionY = -1;
+          break;
+        default: // left
+          x = -60;
+          y = Math.random() * window.innerHeight;
+          directionX = 1;
+          directionY = (Math.random() - 0.5) * 2;
+      }
+
+      element.style.left = `${x}px`;
+      element.style.top = `${y}px`;
+
+      const squirrel: Squirrel = {
+        id: this.squirrelId++,
+        element,
+        x,
+        y,
+        speedX: (Math.random() * 2 + 1) * directionX,
+        speedY: (Math.random() * 2 + 1) * directionY,
+        directionX,
+        directionY,
+      };
+
+      element.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.shootSquirrel(squirrel);
+      });
+
+      this.container.appendChild(element);
+      this.squirrels.push(squirrel);
+    }
+
+    shootSquirrel(squirrel: Squirrel) {
+      this.score++;
+      this.updateScore();
+
+      // Add hit class for animation
+      squirrel.element.classList.add('hit');
+
+      // Create particles effect
+      this.createParticles(squirrel.x, squirrel.y);
+
+      // Show score popup
+      this.showHitEffect(squirrel.x, squirrel.y);
+
+      // Remove squirrel after animation
+      setTimeout(() => {
+        const index = this.squirrels.indexOf(squirrel);
+        if (index > -1) {
+          this.squirrels.splice(index, 1);
+          squirrel.element.remove();
+        }
+      }, 500);
+    }
+
+    createParticles(x: number, y: number) {
+      const particleCount = 12;
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = 50 + Math.random() * 50;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity;
+
+        this.container.appendChild(particle);
+
+        let particleX = x;
+        let particleY = y;
+        let opacity = 1;
+        let life = 0;
+
+        const animateParticle = () => {
+          life += 0.02;
+          particleX += vx * 0.02;
+          particleY += vy * 0.02;
+          opacity = Math.max(0, 1 - life);
+
+          particle.style.left = `${particleX}px`;
+          particle.style.top = `${particleY}px`;
+          particle.style.opacity = opacity.toString();
+
+          if (opacity > 0) {
+            requestAnimationFrame(animateParticle);
+          } else {
+            particle.remove();
+          }
+        };
+
+        requestAnimationFrame(animateParticle);
+      }
+    }
+
+    showHitEffect(x: number, y: number) {
+      const effect = document.createElement('div');
+      effect.className = 'hit-effect';
+      effect.textContent = '+1';
+      effect.style.left = `${x}px`;
+      effect.style.top = `${y}px`;
+
+      this.container.appendChild(effect);
+
+      setTimeout(() => effect.remove(), 1000);
+    }
+
+    updateScore() {
+      this.scoreDisplay.textContent = `Squirrels: ${this.score}`;
+    }
+
+    animate() {
+      this.squirrels.forEach((squirrel) => {
+        // Update position
+        squirrel.x += squirrel.speedX;
+        squirrel.y += squirrel.speedY;
+
+        // Random direction changes
+        if (Math.random() < 0.02) {
+          squirrel.speedX += (Math.random() - 0.5) * 0.5;
+          squirrel.speedY += (Math.random() - 0.5) * 0.5;
+        }
+
+        // Keep speed in reasonable range
+        const speed = Math.sqrt(squirrel.speedX ** 2 + squirrel.speedY ** 2);
+        if (speed > 4) {
+          squirrel.speedX = (squirrel.speedX / speed) * 4;
+          squirrel.speedY = (squirrel.speedY / speed) * 4;
+        }
+
+        // Update DOM
+        squirrel.element.style.left = `${squirrel.x}px`;
+        squirrel.element.style.top = `${squirrel.y}px`;
+
+        // Remove if out of bounds
+        if (
+          squirrel.x < -100 ||
+          squirrel.x > window.innerWidth + 100 ||
+          squirrel.y < -100 ||
+          squirrel.y > window.innerHeight + 100
+        ) {
+          const index = this.squirrels.indexOf(squirrel);
+          if (index > -1) {
+            this.squirrels.splice(index, 1);
+            squirrel.element.remove();
+          }
+        }
+      });
+
+      this.animationFrame = requestAnimationFrame(() => this.animate());
+    }
+
+    destroy() {
+      if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame);
+      }
+      if (this.spawnInterval) {
+        clearInterval(this.spawnInterval);
+      }
+      this.squirrels.forEach((squirrel) => squirrel.element.remove());
+      this.squirrels = [];
+    }
+  }
+
+  // Initialize game when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new SquirrelGame();
+    });
+  } else {
+    new SquirrelGame();
+  }
+</script>
